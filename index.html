@@ -13,13 +13,14 @@
         }
 
         :root {
-            --bg-page: #f6f3ec;
-            --bg-card: #ffffff;
-            --text-main: #1c1c1c;
-            --text-sub: #666666;
-            --accent: #406b60;
+            --bg-page: #0d1117;
+            --bg-card: #161b22;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --accent: #58a6ff;
+            --border-line: #30363d;
             --radius: 18px;
-            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow: 0 2px 12px rgba(0,0,0,0.25);
         }
 
         body {
@@ -27,7 +28,6 @@
             color: var(--text-main);
         }
 
-        /* 顶部导航 */
         header {
             max-width: 1100px;
             margin: 0 auto;
@@ -40,6 +40,7 @@
         .site-logo {
             font-size: 18px;
             font-weight: 600;
+            color: var(--text-main);
         }
 
         nav a {
@@ -59,22 +60,22 @@
             padding: 0 1.5rem;
         }
 
-        /* 大号主卡片 */
         .hero-card {
             background: var(--bg-card);
             border-radius: var(--radius);
             padding: 4rem 3rem;
             box-shadow: var(--shadow);
             margin-bottom: 2.5rem;
+            border: 1px solid var(--border-line);
         }
 
-        /* 栏目区块 */
         .section-card {
             background: var(--bg-card);
             border-radius: var(--radius);
             padding: 3rem;
             box-shadow: var(--shadow);
             margin-bottom: 2.5rem;
+            border: 1px solid var(--border-line);
         }
 
         .grid-row {
@@ -88,9 +89,9 @@
             background: var(--bg-page);
             border-radius: 12px;
             padding: 1.5rem;
+            border: 1px solid var(--border-line);
         }
 
-        /* 响应式适配 */
         @media (max-width:768px) {
             .grid-row {
                 grid-template-columns: 1fr;
@@ -111,21 +112,18 @@
 <header>
     <div class="site-logo">AlexCuiDev</div>
     <nav>
-        <a href="#">首页</a>
+        <a href="index.html">首页</a>
         <a href="#">博客</a>
-        <a href="#">关于</a>
+        <a href="about.html">关于</a>
     </nav>
 </header>
 
 <div class="container">
-    <!-- 主大卡片 留白 -->
     <div class="hero-card">
-        <!-- 以后在这里填标题、介绍、按钮 -->
+        
     </div>
 
-    <!-- 三格栏目区域 空排版 -->
     <div class="section-card">
-        <!-- 以后填栏目标题 -->
         <div class="grid-row">
             <div class="grid-item"></div>
             <div class="grid-item"></div>
