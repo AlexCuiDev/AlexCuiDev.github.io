@@ -3,134 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlexCuiDev | 个人主页</title>
+    <title>崔小建 | CATIA二次开发 & BIM开发工程师</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
         }
 
         :root {
-            --bg-page: #0d1117;
-            --bg-card: #161b22;
-            --text-main: #f0f6fc;
-            --text-sub: #8b949e;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
             --accent: #58a6ff;
-            --border-line: #30363d;
-            --radius: 18px;
-            --shadow: 0 2px 12px rgba(0,0,0,0.25);
+            --border: #30363d;
+            --radius: 10px;
         }
 
         body {
-            background: var(--bg-page);
-            color: var(--text-main);
-        }
-
-        header {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .site-logo {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        nav a {
-            margin-left: 2rem;
-            text-decoration: none;
-            color: var(--text-sub);
-            font-size: 15px;
-        }
-
-        nav a:hover {
-            color: var(--accent);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 20px;
         }
 
-        .hero-card {
-            background: var(--bg-card);
+        /* 导航 */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13,17,23,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* 主页区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 70px;
+            padding-bottom: 40px;
+        }
+
+        .hero-inner {
+            width: 100%;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #2da850;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .gradient {
+            color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
             border-radius: var(--radius);
-            padding: 4rem 3rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2.5rem;
-            border: 1px solid var(--border-line);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 15px;
         }
 
-        .section-card {
-            background: var(--bg-card);
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* 区块通用 */
+        .section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        /* 卡片 */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 3rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2.5rem;
-            border: 1px solid var(--border-line);
+            padding: 24px;
+            margin-bottom: 16px;
         }
 
-        .grid-row {
+        .card h3 {
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .grid-item {
-            background: var(--bg-page);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-line);
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
 
         @media (max-width:768px) {
-            .grid-row {
+            .grid {
                 grid-template-columns: 1fr;
             }
-            header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
+            h1 {
+                font-size: 32px;
             }
-            nav a {
-                margin: 0 0.8rem;
+            .nav-links a {
+                margin-left: 12px;
             }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="site-logo">AlexCuiDev</div>
-    <nav>
-        <a href="index.html">首页</a>
-        <a href="#">博客</a>
-        <a href="about.html">关于</a>
-    </nav>
-</header>
+    <header>
+        <div class="container nav">
+            <div class="logo">AlexCuiDev</div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#about">关于我</a>
+                <a href="#skills">技能</a>
+                <a href="#experience">经历</a>
+                <a href="https://github.com/AlexCuiDev" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </header>
 
-<div class="container">
-    <div class="hero-card">
-        
-    </div>
+    <!-- 首页 -->
+    <section class="hero" id="home">
+        <div class="container hero-inner">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                <span>CATIA二次开发 / BIM开发工程师</span>
+            </div>
+            <h1>你好，我是 <span class="gradient">崔小建</span></h1>
+            <div class="subtitle">专注于 CATIA 开发、BIM 正向设计、工程数字化</div>
+            <div class="desc">
+                现居中国上海，拥有多年 CATIA 二次开发、BIM 工程实践经验，擅长桥梁设计、标准化构件、自动化工具与工程软件研发。
+            </div>
+            <div class="buttons">
+                <a href="https://github.com/AlexCuiDev" target="_blank" class="btn btn-primary">访问 GitHub</a>
+                <a href="#about" class="btn btn-secondary">了解更多</a>
+            </div>
+        </div>
+    </section>
 
-    <div class="section-card">
-        <div class="grid-row">
-            <div class="grid-item"></div>
-            <div class="grid-item"></div>
-            <div class="grid-item"></div>
+    <!-- 关于我 -->
+<section class="section" id="about">
+    <div class="container">
+        <h2 class="section-title">关于我</h2>
+        <p class="section-desc">CATIA 二次开发专家 | BIM 开发工程师 | 工程数字化实践者</p>
+        <div class="grid">
+            <div class="card">
+                <h3>个人背景</h3>
+                <p>中共党员，现居上海，工程数字化领域资深从业者</p>
+            </div>
+            <div class="card">
+                <h3>核心技术</h3>
+                <p>CATIA二次开发（EKL/C#）、BIM正向设计、自动化工具开发</p>
+            </div>
+            <div class="card">
+                <h3>职业历程</h3>
+                <p>中铁四局、同济设计院、达索代理商，历任技术总监/BIM工程师</p>
+            </div>
+            <div class="card">
+                <h3>成果能力</h3>
+                <p>多项专利软著与国家级奖项，擅长技术方案与项目落地</p>
+            </div>
         </div>
     </div>
 </div>
+</section>
+
+    <!-- 技能 -->
+    <section class="section" id="skills">
+        <div class="container">
+            <h2 class="section-title">专业技能</h2>
+            <p class="section-desc">我擅长的技术栈与能力</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>CATIA 二次开发</h3>
+                    <p>EKL、C#、自动化建模、批量处理、插件开发、达索生态集成</p>
+                </div>
+                <div class="card">
+                    <h3>BIM 正向设计</h3>
+                    <p>桥梁 BIM、钢结构设计、预制构件、标准化、全过程 BIM 咨询</p>
+                </div>
+                <div class="card">
+                    <h3>工程软件研发</h3>
+                    <p>需求分析、架构设计、插件开发、项目实施、技术攻关</p>
+                </div>
+                <div class="card">
+                    <h3>平台与工具</h3>
+                    <p>欧特克、奔特利、广联达、CATIA、BIM 协同平台、自动化工具</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作经历 -->
+    <section class="section" id="experience">
+        <div class="container">
+            <h2 class="section-title">工作经历</h2>
+            <p class="section-desc">我的职业历程</p>
+
+            <div class="card">
+                <h3>上海慧广科技发展有限公司 | AEC 技术总监</h3>
+                <p>2025.02 - 至今</p>
+                <p>达索代理商，负责行业方案、售前支持、技术攻关、CATIA 二次开发项目管理</p>
+            </div>
+
+            <div class="card">
+                <h3>同济大学建筑设计研究院 | BIM 开发工程师</h3>
+                <p>2018.11 - 2025.02</p>
+                <p>大型桥梁 BIM 正向设计、项目落地、课题研究、成果转化</p>
+            </div>
+
+            <div class="card">
+                <h3>中铁四局集团上海工程有限公司 | 技术主管</h3>
+                <p>2016.07 - 2018.11</p>
+                <p>施工技术管理、BIM 咨询、跨团队协作、项目统筹</p>
+            </div>
+        </div>
+    </section>
+</section>
+    <!-- 底部 -->
+    <footer style="padding:40px 0; border-top:1px solid var(--border); text-align:center; color:var(--text-secondary)">
+        <div class="container">
+            <p>崔小建 | CATIA二次开发 & BIM开发工程师 | 中国上海</p>
+            <p style="margin-top:8px">© 2026 AlexCuiDev</p>
+        </div>
+    </footer>
 
 </body>
 </html>
