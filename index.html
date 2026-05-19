@@ -273,6 +273,7 @@
             margin-bottom: 16px;
             overflow: hidden;
             flex-shrink: 0;
+            cursor: zoom-in; /* 鼠标样式变为放大 */
         }
 
         .work-img img {
@@ -301,6 +302,58 @@
             flex-grow: 1;
         }
 
+        /* 图片预览弹窗样式 */
+        .image-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .image-preview-modal.active {
+            display: flex;
+        }
+
+        .preview-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+
+        .close-preview {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-preview:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -322,6 +375,12 @@
             }
             .section {
                 padding: 60px 0;
+            }
+            .close-preview {
+                top: -30px;
+                font-size: 24px;
+                width: 30px;
+                height: 30px;
             }
         }
 
@@ -466,28 +525,28 @@
             <div class="scroll-wrapper">
                 <div class="scroll-container">
                     <div class="work-card paper" onclick="window.open('docs/paper02.pdf')">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/paper02.webp', event)">
                             <img src="images/paper02.webp" alt="论文封面2">
                         </div>
                         <h4>基于3DE平台的下部结构BIM模型快速创建系统</h4>
                         <p>行业期刊 | 2021 | 第一作者</p>
                     </div>
                     <div class="work-card paper" onclick="window.open('docs/paper01.pdf')">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/paper01.webp', event)">
                             <img src="images/paper01.webp" alt="论文封面1">
                         </div>
                         <h4>钢混组合梁多尺度BIM正向设计研究</h4>
                         <p>核心期刊 | 2022 | 开发人员</p>
                     </div>
                     <div class="work-card paper" onclick="window.open('docs/paper03.pdf')">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/paper03.webp', event)">
                             <img src="images/paper03.webp" alt="论文封面1">
                         </div>
                         <h4>基于BIM和快速施工的城市高架预制钢混组合梁桥设计系统研发</h4>
                         <p>核心期刊 | 2023 | 开发人员</p>
                     </div>
                     <div class="work-card paper" onclick="window.open('docs/paper04.pdf')">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/paper04.webp', event)">
                             <img src="images/paper04.webp" alt="论文封面1">
                         </div>
                         <h4>BIM经理 BIM项目管理指南</h4>
@@ -501,28 +560,28 @@
             <div class="scroll-wrapper">
                 <div class="scroll-container">
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/zl01.webp', event)">
                             <img src="images/zl01.webp" alt="专利证书1">
                         </div>
                         <h4>桥梁工程设计文件生成、装置、计算机设备和存储介质</h4>
                         <p>发明专利 | 授权 | 专利号：CN202010277385.1 | 参与开发</p>
                     </div>
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/zl02.webp', event)">
                             <img src="images/zl02.webp" alt="专利证书2">
                         </div>
                         <h4>一种钢混组合梁结构骨架半自动设计方法及系统</h4>
                         <p>发明专利 | 授权 | 专利号：CN202110516603.7 | 参与开发</p>
                     </div>
                      <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/zl03.webp', event)">
                             <img src="images/zl03.webp" alt="专利证书3">
                         </div>
                         <h4>EICAD与IFC的路线数据自动转换方法、介质及系统</h4>
                         <p>发明专利 | 授权 | 专利号：CN202011372224.7 | 参与开发</p>
                     </div>
                      <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/zl04.webp', event)">
                             <img src="images/zl04.webp" alt="专利证书4">
                         </div>
                         <h4>一种基于BIM模型的线性工程漫游视频的制作方法及系统</h4>
@@ -536,14 +595,14 @@
             <div class="scroll-wrapper">
                 <div class="scroll-container">
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/copyright1.jpg', event)">
                             <img src="images/copyright1.jpg" alt="软著证书1">
                         </div>
                         <h4>桥梁BIM参数化设计软件V1.0</h4>
                         <p>登记号：2023SRXXXXXX | 2023</p>
                     </div>
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/copyright2.jpg', event)">
                             <img src="images/copyright2.jpg" alt="软著证书2">
                         </div>
                         <h4>CATIA批量建模插件V2.0</h4>
@@ -557,14 +616,14 @@
             <div class="scroll-wrapper">
                 <div class="scroll-container">
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/project1.jpg', event)">
                             <img src="images/project1.jpg" alt="项目图1">
                         </div>
                         <h4>大型跨江大桥BIM正向设计项目</h4>
                         <p>2021-2024 | 核心技术负责人</p>
                     </div>
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/project2.jpg', event)">
                             <img src="images/project2.jpg" alt="项目图2">
                         </div>
                         <h4>市政道路BIM数字化平台开发</h4>
@@ -578,14 +637,14 @@
             <div class="scroll-wrapper">
                 <div class="scroll-container">
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/award1.jpg', event)">
                             <img src="images/award1.jpg" alt="荣誉证书1">
                         </div>
                         <h4>优秀工程师荣誉证书</h4>
                         <p>颁发单位 | 2023年</p>
                     </div>
                     <div class="work-card">
-                        <div class="work-img">
+                        <div class="work-img" onclick="previewImage('images/award2.jpg', event)">
                             <img src="images/award2.jpg" alt="荣誉证书2">
                         </div>
                         <h4>BIM技术应用先进个人</h4>
@@ -605,8 +664,17 @@
         </div>
     </footer>
 
-    <!-- 丝滑拖动滚动脚本 -->
+    <!-- 图片预览弹窗 -->
+    <div class="image-preview-modal" id="imagePreviewModal" onclick="closePreview()">
+        <div class="preview-content" onclick="event.stopPropagation()">
+            <span class="close-preview" onclick="closePreview()">&times;</span>
+            <img src="" alt="预览图片" class="preview-img" id="previewImg">
+        </div>
+    </div>
+
+    <!-- 脚本 -->
     <script>
+    // 丝滑拖动滚动脚本
     document.addEventListener('DOMContentLoaded', function() {
       const scrollContainers = document.querySelectorAll('.scroll-container');
       
@@ -642,6 +710,37 @@
           container.scrollLeft = scrollLeft - walk;
         });
       });
+    });
+
+    // 图片预览功能
+    function previewImage(imgSrc, event) {
+        // 阻止事件冒泡，避免触发论文卡片的PDF打开事件
+        event.stopPropagation();
+        
+        const modal = document.getElementById('imagePreviewModal');
+        const previewImg = document.getElementById('previewImg');
+        
+        previewImg.src = imgSrc;
+        modal.classList.add('active');
+        
+        // 禁止页面滚动
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 关闭预览
+    function closePreview() {
+        const modal = document.getElementById('imagePreviewModal');
+        modal.classList.remove('active');
+        
+        // 恢复页面滚动
+        document.body.style.overflow = '';
+    }
+
+    // 按ESC键关闭预览
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePreview();
+        }
     });
     </script>
 </body>
