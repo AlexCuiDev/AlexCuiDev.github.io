@@ -459,7 +459,7 @@
     <section class="section" id="works">
         <div class="container">
             <h2 class="section-title">成果展示</h2>
-            <p class="section-desc">学术论文 · 授权专利 · 软件著作权 · 工程项目</p>
+            <p class="section-desc">学术论文 · 授权专利 · 软件著作权 · 工程项目 · 荣誉证书</p>
 
             <!-- 学术论文（可点击PDF） -->
             <h3 style="margin:20px 0 12px; color:var(--accent)">📄 学术论文</h3>
@@ -502,17 +502,31 @@
                 <div class="scroll-container">
                     <div class="work-card">
                         <div class="work-img">
-                            <img src="images/patent1.jpg" alt="专利证书1">
+                            <img src="images/zl01.webp" alt="专利证书1">
                         </div>
-                        <h4>一种桥梁钢结构自动化建模系统</h4>
-                        <p>发明专利 | 授权 | 专利号：ZL2023XXXXXX</p>
+                        <h4>桥梁工程设计文件生成、装置、计算机设备和存储介质</h4>
+                        <p>发明专利 | 授权 | 专利号：CN202010277385.1 | 参与开发</p>
                     </div>
                     <div class="work-card">
                         <div class="work-img">
-                            <img src="images/patent2.jpg" alt="专利证书2">
+                            <img src="images/zl02.webp" alt="专利证书2">
                         </div>
-                        <h4>一种BIM构件批量生成工具</h4>
-                        <p>实用新型 | 授权 | 专利号：ZL2022XXXXXX</p>
+                        <h4>一种钢混组合梁结构骨架半自动设计方法及系统</h4>
+                        <p>发明专利 | 授权 | 专利号：CN202110516603.7 | 参与开发</p>
+                    </div>
+                     <div class="work-card">
+                        <div class="work-img">
+                            <img src="images/zl03.webp" alt="专利证书3">
+                        </div>
+                        <h4>EICAD与IFC的路线数据自动转换方法、介质及系统</h4>
+                        <p>发明专利 | 授权 | 专利号：CN202011372224.7 | 参与开发</p>
+                    </div>
+                     <div class="work-card">
+                        <div class="work-img">
+                            <img src="images/zl04.webp" alt="专利证书4">
+                        </div>
+                        <h4>一种基于BIM模型的线性工程漫游视频的制作方法及系统</h4>
+                        <p>发明专利 | 授权 | 专利号：CN202211000393.7 | 参与开发</p>
                     </div>
                 </div>
             </div>
@@ -558,6 +572,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 🔥 新增：荣誉证书（仅图片） -->
+            <h3 style="margin:40px 0 12px; color:var(--accent)">🏆 荣誉证书</h3>
+            <div class="scroll-wrapper">
+                <div class="scroll-container">
+                    <div class="work-card">
+                        <div class="work-img">
+                            <img src="images/award1.jpg" alt="荣誉证书1">
+                        </div>
+                        <h4>优秀工程师荣誉证书</h4>
+                        <p>颁发单位 | 2023年</p>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-img">
+                            <img src="images/award2.jpg" alt="荣誉证书2">
+                        </div>
+                        <h4>BIM技术应用先进个人</h4>
+                        <p>颁发单位 | 2024年</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -569,5 +605,44 @@
         </div>
     </footer>
 
+    <!-- 丝滑拖动滚动脚本 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollContainers = document.querySelectorAll('.scroll-container');
+      
+      scrollContainers.forEach(container => {
+        container.style.scrollBehavior = 'smooth';
+        
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          container.style.cursor = 'grabbing';
+          startX = e.pageX - container.offsetLeft;
+          scrollLeft = container.scrollLeft;
+        });
+
+        container.addEventListener('mouseleave', () => {
+          isDragging = false;
+          container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mouseup', () => {
+          isDragging = false;
+          container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+          const x = e.pageX - container.offsetLeft;
+          const walk = (x - startX) * 1.2;
+          container.scrollLeft = scrollLeft - walk;
+        });
+      });
+    });
+    </script>
 </body>
 </html>
