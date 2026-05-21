@@ -171,6 +171,22 @@
             margin-top: 80px;
         }
 
+        /* 加载动画样式（新增，不改变布局） */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(88, 166, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .nav-links a {
                 margin-left: 12px;
@@ -214,7 +230,10 @@
 
     <section class="container">
         <div class="blog-list" id="postList">
-            <p style="text-align:center; color:var(--text-secondary);">正在加载文章...</p>
+            <!-- 优化加载提示（新增加载动画，不改变布局） -->
+            <p style="text-align:center; color:var(--text-secondary);">
+                <span class="loading-spinner"></span>正在加载文章...
+            </p>
         </div>
     </section>
 
@@ -227,65 +246,107 @@
 
     <script>
         // ==============================================
-        // 真·全自动：不需要配置任何文件名！
-        // 丢文件进 posts 就自动显示！
+        // 增强版全自动方案：零配置、高容错、多维度自动提取
+        // 1. 自动识别posts目录所有HTML文章
+        // 2. 自动提取标题/日期/标签/摘要（多规则兼容）
+        // 3. 容错处理+加载状态优化
+        // 4. 完全保留原有布局和样式
         // ==============================================
         async function autoLoadAllPosts() {
             const listEl = document.getElementById("postList");
             const postList = [];
 
+            // 工具函数：安全提取内容
+            const safeExtract = (html, regex) => {
+                try {
+                    const match = html.match(regex);
+                    return match ? match[1].trim() : '';
+                } catch (e) {
+                    return '';
+                }
+            };
+
             try {
-                // 自动获取 posts 目录下所有文件
+                // 1. 自动获取posts目录下所有HTML文件（兼容不同服务器目录展示格式）
                 const response = await fetch('posts/');
+                if (!response.ok) throw new Error('无法访问posts目录');
+                
                 const text = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
-                const links = doc.querySelectorAll('a');
+                const links = doc.querySelectorAll('a[href$=".html"]');
+                
+                // 去重+过滤无效链接
+                const htmlFiles = Array.from(links)
+                    .map(link => link.getAttribute('href'))
+                    .filter(href => href && href.endsWith('.html'))
+                    .filter((file, index, self) => self.indexOf(file) === index);
 
-                const htmlFiles = [];
-                links.forEach(link => {
-                    const href = link.getAttribute('href');
-                    if (href.endsWith('.html')) {
-                        htmlFiles.push(href);
-                    }
-                });
-
-                // 读取每一篇文章信息
+                // 2. 批量解析文章信息（带容错）
                 for (const file of htmlFiles) {
                     try {
-                        const res = await fetch('posts/' + file);
+                        const res = await fetch(`posts/${file}`);
+                        if (!res.ok) continue;
+                        
                         const html = await res.text();
+                        const lowerHtml = html.toLowerCase();
 
-                        // 自动提取标题
-                        let title = file.replace('.html', '');
-                        const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-                        if (titleMatch) title = titleMatch[1].replace(/\|.*/, '').trim();
+                        // 自动提取标题（多规则兼容）
+                        let title = safeExtract(html, /<title>([\s\S]*?)<\/title>/i) || 
+                                    safeExtract(html, /<h1 class=["']post-title["']>([\s\S]*?)<\/h1>/i) ||
+                                    file.replace(/\.html$/, '').replace(/-/g, ' ').replace(/^\d+-\d+-\d+-/, '');
+                        // 清理标题后缀
+                        title = title.replace(/\|.*$/, '').replace(/-{2,}/g, ' ').trim() || '未命名文章';
 
-                        // 自动提取日期
-                        let date = '2026-01-01';
-                        const dateMatch = html.match(/publish-date.*?"([0-9\-]+)"/i);
-                        if (dateMatch) date = dateMatch[1];
+                        // 自动提取日期（多规则兼容）
+                        let date = safeExtract(html, /publish-date["']?\s*:\s*["']([0-9\-]+)["']/i) ||
+                                   safeExtract(html, /<meta name=["']publish-date["'] content=["']([0-9\-]+)["']/i) ||
+                                   safeExtract(html, /发布时间：([0-9\-]+)/i) ||
+                                   // 从文件名提取日期（兼容 yyyy-mm-dd-标题.html 格式）
+                                   (file.match(/^(\d{4}-\d{2}-\d{2})-/) ? file.match(/^(\d{4}-\d{2}-\d{2})-/)[1] : '2026-01-01');
 
-                        // 自动提取简介
-                        const textOnly = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                        const desc = textOnly.slice(0, 160) + '...';
+                        // 自动提取标签（新增，不改变布局）
+                        let tag = safeExtract(html, /<meta name=["']tag["'] content=["']([^"']+)["']/i) ||
+                                  safeExtract(html, /标签：([^<]+)/i) || '技术笔记';
 
-                        postList.push({ file, title, date, desc });
-                    } catch (e) {}
+                        // 自动提取摘要（优化：优先提取专门的摘要标签，再提取正文）
+                        let desc = safeExtract(html, /<meta name=["']description["'] content=["']([\s\S]{1,160})["']/i) ||
+                                   safeExtract(html, /<div class=["']post-excerpt["']>([\s\S]{1,160})<\/div>/i);
+                        // 备用方案：纯文本截取（优化清理规则）
+                        if (!desc) {
+                            const textOnly = html.replace(/<script[\s\S]*?<\/script>/gi, '')
+                                                .replace(/<style[\s\S]*?<\/style>/gi, '')
+                                                .replace(/<[^>]+>/g, ' ')
+                                                .replace(/\s+/g, ' ')
+                                                .trim();
+                            desc = textOnly.slice(0, 160) || '暂无摘要';
+                        }
+                        desc += desc.length >= 160 ? '...' : '';
+
+                        postList.push({ file, title, date, tag, desc });
+                    } catch (e) {
+                        console.warn(`解析文章 ${file} 失败：`, e);
+                        continue;
+                    }
                 }
 
-                // 最新文章排在最前
+                // 3. 按日期排序（最新在前）
                 postList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                // 自动生成卡片
+                // 4. 生成博客卡片（完全保留原有布局）
                 listEl.innerHTML = '';
+                if (postList.length === 0) {
+                    listEl.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">暂无文章</p>';
+                    return;
+                }
+
                 postList.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'blog-card';
                     card.innerHTML = `
                         <div class="blog-meta">
                             <span>${p.date}</span>
-                            <span class="tag">技术笔记</span>
+                            <span class="tag">${p.tag}</span>
                         </div>
                         <h2><a href="posts/${p.file}">${p.title}</a></h2>
                         <div class="blog-excerpt">${p.desc}</div>
@@ -294,16 +355,17 @@
                     listEl.appendChild(card);
                 });
 
-                if (postList.length === 0) {
-                    listEl.innerHTML = '<p style="text-align:center;">暂无文章</p>';
-                }
-
             } catch (e) {
-                listEl.innerHTML = '<p style="text-align:center;">加载失败，请检查 posts 文件夹</p>';
+                console.error('加载文章列表失败：', e);
+                listEl.innerHTML = `
+                    <p style="text-align:center; color:var(--text-secondary);">
+                        加载失败 → 请检查posts文件夹是否存在，或服务器是否允许访问目录
+                    </p>
+                `;
             }
         }
 
-        // 页面加载 → 自动运行
+        // 页面加载完成后自动运行（保留原有逻辑）
         window.addEventListener('DOMContentLoaded', autoLoadAllPosts);
     </script>
 </body>
