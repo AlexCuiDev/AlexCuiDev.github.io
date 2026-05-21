@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的第一篇测试博客 | AlexCuiDev</title>
+    <meta name="publish-date" content="2026-05-21">
+    <meta name="tags" content="测试,博客系统">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --border: #30363d;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            line-height: 1.8;
+        }
+        h1 {
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .date {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        p {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        /* 图片样式，和主页风格统一 */
+        .blog-image {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .caption {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>我的第一篇测试博客（带图片版）</h1>
+    <div class="date">2026-05-21</div>
+
+    <p>这是我的第一篇带图片的测试博客，用来验证NAS私有图床的图片加载效果。</p>
+
+    <!-- 这里用你NAS里的真实图片地址，你可以直接复制文件名修改 -->
+     <img src="assets/Pasted image 20260521120526.png" class="blog-image" alt="配图">
+
+    <div class="caption">图：测试图片（来自你的NAS私有图床）</div>
+
+    <p>✅ 图片加载成功后，说明你的NAS图床配置完全正常，以后所有博客的图片都可以这样引用，不用上传到GitHub仓库，既安全又不占空间。</p>
+    <p>测试完成后，你的博客系统就实现了「纯文本仓库 + 私有图片」的完全分离。</p>
+</body>
+</html>
