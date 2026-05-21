@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客 | 崔小建 | CATIA二次开发 & BIM开发工程师</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --border: #30363d;
+            --radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13,17,23,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .blog-hero {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 60px;
+        }
+
+        .blog-hero h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .blog-hero p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 800px;
+        }
+
+        .blog-list {
+            max-width: 800px;
+            margin: 0 auto 80px;
+        }
+
+        .blog-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .blog-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .blog-meta .tag {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .blog-card h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .blog-card h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .blog-card h2 a:hover {
+            color: var(--accent);
+        }
+
+        .blog-excerpt {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .blog-readmore {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .blog-readmore:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            padding:40px 0; 
+            border-top:1px solid var(--border); 
+            text-align:center; 
+            color:var(--text-secondary);
+            margin-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links a {
+                margin-left: 12px;
+                font-size: 14px;
+            }
+            .blog-hero h1 {
+                font-size: 28px;
+            }
+            .blog-card {
+                padding: 20px;
+            }
+            .blog-card h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav">
+            <div class="logo">AlexCuiDev</div>
+            <div class="nav-links">
+                <a href="../index.html#home">首页</a>
+                <a href="../index.html#about">关于我</a>
+                <a href="../index.html#skills">技能</a>
+                <a href="../index.html#experience">经历</a>
+                <a href="../index.html#works">成果展示</a>
+                <a href="index.html" class="active">博客</a>
+                <a href="https://github.com/AlexCuiDev" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="blog-hero">
+        <div class="container">
+            <h1>我的技术博客</h1>
+            <p>分享 CATIA 二次开发、BIM 正向设计、工程数字化的技术实践与思考</p>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="blog-list" id="postList">
+            <p style="text-align:center; color:var(--text-secondary);">正在加载文章...</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>崔小建 | CATIA二次开发 & BIM开发工程师 | 中国上海</p>
+            <p style="margin-top:8px">© 2026 AlexCuiDev</p>
+        </div>
+    </footer>
+
+    <script>
+        // ==============================================
+        // 真·全自动：不需要配置任何文件名！
+        // 丢文件进 posts 就自动显示！
+        // ==============================================
+        async function autoLoadAllPosts() {
+            const listEl = document.getElementById("postList");
+            const postList = [];
+
+            try {
+                // 自动获取 posts 目录下所有文件
+                const response = await fetch('posts/');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const links = doc.querySelectorAll('a');
+
+                const htmlFiles = [];
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href.endsWith('.html')) {
+                        htmlFiles.push(href);
+                    }
+                });
+
+                // 读取每一篇文章信息
+                for (const file of htmlFiles) {
+                    try {
+                        const res = await fetch('posts/' + file);
+                        const html = await res.text();
+
+                        // 自动提取标题
+                        let title = file.replace('.html', '');
+                        const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+                        if (titleMatch) title = titleMatch[1].replace(/\|.*/, '').trim();
+
+                        // 自动提取日期
+                        let date = '2026-01-01';
+                        const dateMatch = html.match(/publish-date.*?"([0-9\-]+)"/i);
+                        if (dateMatch) date = dateMatch[1];
+
+                        // 自动提取简介
+                        const textOnly = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                        const desc = textOnly.slice(0, 160) + '...';
+
+                        postList.push({ file, title, date, desc });
+                    } catch (e) {}
+                }
+
+                // 最新文章排在最前
+                postList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // 自动生成卡片
+                listEl.innerHTML = '';
+                postList.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'blog-card';
+                    card.innerHTML = `
+                        <div class="blog-meta">
+                            <span>${p.date}</span>
+                            <span class="tag">技术笔记</span>
+                        </div>
+                        <h2><a href="posts/${p.file}">${p.title}</a></h2>
+                        <div class="blog-excerpt">${p.desc}</div>
+                        <a href="posts/${p.file}" class="blog-readmore">阅读全文 →</a>
+                    `;
+                    listEl.appendChild(card);
+                });
+
+                if (postList.length === 0) {
+                    listEl.innerHTML = '<p style="text-align:center;">暂无文章</p>';
+                }
+
+            } catch (e) {
+                listEl.innerHTML = '<p style="text-align:center;">加载失败，请检查 posts 文件夹</p>';
+            }
+        }
+
+        // 页面加载 → 自动运行
+        window.addEventListener('DOMContentLoaded', autoLoadAllPosts);
+    </script>
+</body>
+</html>
