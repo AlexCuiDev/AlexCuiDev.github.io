@@ -14,6 +14,52 @@
             --accent: #58a6ff;
             --border: #30363d;
         }
+
+        /* 顶部导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 999;
+        }
+        .navbar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 16px;
+            font-size: 14px;
+        }
+        .navbar a.active {
+            color: var(--accent);
+        }
+
+        /* 固定在左上角的返回按钮，滚动永远可见 */
+        .fixed-back {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            z-index: 999;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            background: rgba(13,17,23,0.8);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .fixed-back:hover {
+            text-decoration: underline;
+        }
+
+        /* 原有样式完全不变 */
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
@@ -35,7 +81,6 @@
             color: var(--text-primary);
             margin-bottom: 16px;
         }
-        /* 图片样式，和主页风格统一 */
         .blog-image {
             width: 100%;
             max-width: 800px;
@@ -54,6 +99,21 @@
     </style>
 </head>
 <body>
+
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+        <div><strong>AlexCuiDev</strong></div>
+        <div>
+            <a href="../../index.html">首页</a>
+            <a href="../index.html" class="active">博客</a>
+            <a href="https://github.com/AlexCuiDev" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <!-- 固定返回按钮：滚动永远可见，随时返回 -->
+    <a href="../index.html" class="fixed-back">← 返回博客列表</a>
+
+    <!-- 你的原有内容完全不变 -->
     <h1>我的第一篇测试博客（带图片版）</h1>
     <div class="date">2026-05-21</div>
 
@@ -65,5 +125,6 @@
 
     <p>✅ 图片加载成功后，说明你的NAS图床配置完全正常，以后所有博客的图片都可以这样引用，不用上传到GitHub仓库，既安全又不占空间。</p>
     <p>测试完成后，你的博客系统就实现了「纯文本仓库 + 私有图片」的完全分离。</p>
+
 </body>
 </html>
