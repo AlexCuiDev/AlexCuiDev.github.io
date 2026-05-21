@@ -289,215 +289,23 @@
             <p style="margin-top:8px">© 2026 AlexCuiDev</p>
         </div>
     </footer>
-
     <script>
-        // 增强版全自动博客加载方案
-        // 特性：自动识别、容错处理、加载状态、重试机制、无障碍支持
-        async function autoLoadAllPosts() {
-            const listEl = document.getElementById("postList");
-            const postList = [];
-
-            // 工具函数：安全提取内容
-            const safeExtract = (html, regex) => {
-                try {
-                    const match = html.match(regex);
-                    return match ? match[1].trim() : '';
-                } catch (e) {
-                    return '';
-                }
-            };
-
-            // 重置加载状态
-            listEl.innerHTML = `
-                <p style="text-align:center; color:var(--text-secondary);">
-                    <span class="loading-spinner"></span>正在加载文章...
-                </p>
-            `;
-
-            try {
-                // 1. 尝试获取posts目录下所有HTML文件（兼容不同服务器配置）
-                let htmlFiles = [];
-                try {
-                    const response = await fetch('posts/', { 
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'text/html'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        const text = await response.text();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(text, 'text/html');
-                        const links = doc.querySelectorAll('a[href$=".html"]');
-                        
-                        // 去重+过滤无效链接+处理相对路径
-                        htmlFiles = Array.from(links)
-                            .map(link => link.getAttribute('href'))
-                            .filter(href => href && href.endsWith('.html'))
-                            .map(href => {
-                                // 处理绝对路径/相对路径
-                                if (href.startsWith('/')) href = href.substring(1);
-                                if (href.startsWith('posts/')) href = href.replace('posts/', '');
-                                return href;
-                            })
-                            .filter((file, index, self) => self.indexOf(file) === index);
-                    } else {
-                        // 服务器不允许目录访问时，尝试备用方案（手动指定常见文件名格式）
-                        console.warn('服务器禁止目录访问，尝试备用加载方案');
-                    }
-                } catch (e) {
-                    console.warn('目录访问失败，尝试备用加载方案：', e);
-                }
-
-                // 备用方案：如果无法读取目录，可手动添加文章文件名（按需修改）
-                if (htmlFiles.length === 0) {
-                    // 示例：手动添加文章列表（取消注释并修改为实际文件名）
-                    // htmlFiles = [
-                    //     '2026-01-01-catia二次开发入门.html',
-                    //     '2026-01-10-bim正向设计实践.html'
-                    // ];
-                }
-
-                if (htmlFiles.length === 0) {
-                    listEl.innerHTML = `
-                        <p class="error-message">未检测到文章文件</p>
-                        <p style="text-align:center; color:var(--text-secondary);">
-                            请检查posts文件夹是否存在，或是否包含HTML格式的文章
-                        </p>
-                    `;
-                    return;
-                }
-
-                // 2. 批量解析文章信息（带容错）
-                for (const file of htmlFiles) {
-                    try {
-                        // 处理路径，避免重复的posts/前缀
-                        const filePath = file.startsWith('posts/') ? file : `posts/${file}`;
-                        const res = await fetch(filePath);
-                        
-                        if (!res.ok) {
-                            console.warn(`无法访问文章文件: ${filePath}`);
-                            continue;
-                        }
-                        
-                        const html = await res.text();
-                        const lowerHtml = html.toLowerCase();
-
-                        // 自动提取标题（多规则兼容）
-                        let title = safeExtract(html, /<title>([\s\S]*?)<\/title>/i) || 
-                                    safeExtract(html, /<h1 class=["']?post-title["']?>([\s\S]*?)<\/h1>/i) ||
-                                    safeExtract(html, /<h1>([\s\S]*?)<\/h1>/i) ||
-                                    file.replace(/\.html$/, '').replace(/-/g, ' ').replace(/^\d+-\d+-\d+-/, '');
-                        // 清理标题后缀
-                        title = title.replace(/\|.*$/, '').replace(/-{2,}/g, ' ').trim() || '未命名文章';
-
-                        // 自动提取日期（多规则兼容）
-                        let date = safeExtract(html, /publish-date["']?\s*:\s*["']([0-9\-]+)["']/i) ||
-                                   safeExtract(html, /<meta name=["']publish-date["'] content=["']([0-9\-]+)["']/i) ||
-                                   safeExtract(html, /发布时间[:：]\s*([0-9\-]+)/i) ||
-                                   safeExtract(html, /<time.*?datetime=["']([0-9\-]+)["']/i) ||
-                                   // 从文件名提取日期（兼容 yyyy-mm-dd-标题.html 格式）
-                                   (file.match(/^(\d{4}-\d{2}-\d{2})-/) ? file.match(/^(\d{4}-\d{2}-\d{2})-/)[1] : '2026-01-01');
-
-                        // 验证日期格式
-                        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-                            date = '2026-01-01';
-                        }
-
-                        // 自动提取标签
-                        let tag = safeExtract(html, /<meta name=["']tag["'] content=["']([^"']+)["']/i) ||
-                                  safeExtract(html, /<meta name=["']keywords["'] content=["']([^"']+)["']/i) ||
-                                  safeExtract(html, /标签[:：]\s*([^<]+)/i) || '技术笔记';
-                        // 只取第一个标签（避免标签过多）
-                        tag = tag.split(',')[0].trim() || '技术笔记';
-
-                        // 自动提取摘要（优化优先级）
-                        let desc = safeExtract(html, /<meta name=["']description["'] content=["']([\s\S]{1,160})["']/i) ||
-                                   safeExtract(html, /<div class=["']?post-excerpt["']?>([\s\S]{1,160})<\/div>/i) ||
-                                   safeExtract(html, /<p class=["']?excerpt["']?>([\s\S]{1,160})<\/p>/i);
-                        
-                        // 备用方案：纯文本截取（优化清理规则）
-                        if (!desc) {
-                            const textOnly = html.replace(/<script[\s\S]*?<\/script>/gi, '')
-                                                .replace(/<style[\s\S]*?<\/style>/gi, '')
-                                                .replace(/<[^>]+>/g, ' ')
-                                                .replace(/\s+/g, ' ')
-                                                .trim();
-                            desc = textOnly.slice(0, 160) || '暂无摘要';
-                        }
-                        // 清理HTML实体和多余空格
-                        desc = desc.replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-                                   .replace(/&amp;/g, '&').trim();
-                        desc += desc.length >= 160 ? '...' : '';
-
-                        postList.push({ file, title, date, tag, desc });
-                    } catch (e) {
-                        console.warn(`解析文章 ${file} 失败：`, e);
-                        continue;
-                    }
-                }
-
-                // 3. 按日期排序（最新在前）
-                postList.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                // 4. 生成博客卡片
-                listEl.innerHTML = '';
-                
-                if (postList.length === 0) {
-                    listEl.innerHTML = `
-                        <p style="text-align:center; color:var(--text-secondary);">
-                            📝 暂无发布的文章，敬请期待
-                        </p>
-                    `;
-                    return;
-                }
-
-                postList.forEach(p => {
-                    const card = document.createElement('div');
-                    card.className = 'blog-card';
-                    card.tabIndex = 0; // 无障碍支持：允许键盘聚焦
-                    card.setAttribute('aria-label', `博客文章：${p.title}，发布于${p.date}，标签：${p.tag}`);
-                    
-                    card.innerHTML = `
-                        <div class="blog-meta">
-                            <time datetime="${p.date}">${p.date}</time>
-                            <span class="tag">${p.tag}</span>
-                        </div>
-                        <h2><a href="posts/${p.file}" aria-label="阅读文章：${p.title}">${p.title}</a></h2>
-                        <div class="blog-excerpt">${p.desc}</div>
-                        <a href="posts/${p.file}" class="blog-readmore" aria-label="阅读${p.title}全文">阅读全文 →</a>
-                    `;
-                    
-                    // 点击卡片跳转（增强体验）
-                    card.addEventListener('click', (e) => {
-                        if (!e.target.closest('a')) {
-                            window.location.href = `posts/${p.file}`;
-                        }
-                    });
-                    
-                    listEl.appendChild(card);
-                });
-
-            } catch (e) {
-                console.error('加载文章列表失败：', e);
-                listEl.innerHTML = `
-                    <p class="error-message">加载文章失败 😞</p>
-                    <p style="text-align:center; color:var(--text-secondary);">
-                        请检查网络连接或posts文件夹路径是否正确
-                    </p>
-                    <div style="text-align:center; margin-top:10px;">
-                        <button class="retry-btn" onclick="autoLoadAllPosts()">重试加载</button>
-                    </div>
-                `;
-            }
-        }
-
-        // 页面加载完成后自动运行
-        window.addEventListener('DOMContentLoaded', autoLoadAllPosts);
+    // 纯静态文章列表 —— 100% 能显示
+    document.addEventListener('DOMContentLoaded', function(){
+        const list = document.getElementById('postList');
         
-        // 暴露重试函数到全局
-        window.autoLoadAllPosts = autoLoadAllPosts;
+        list.innerHTML = `
+        <div class="blog-card">
+            <div class="blog-meta">
+                <span>2026-05-21</span>
+                <span class="tag">CATIA开发</span>
+            </div>
+            <h2><a href="posts/test-post.html">我的第一篇技术博客</a></h2>
+            <div class="blog-excerpt">分享CATIA二次开发的第一个实践记录</div>
+            <a href="posts/test-post.html" class="blog-readmore">阅读全文 →</a>
+        </div>
+        `;
+    });
     </script>
 </body>
 </html>
