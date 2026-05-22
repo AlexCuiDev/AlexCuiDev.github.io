@@ -110,8 +110,13 @@
         }
 
         .blog-list {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto 80px;
+        }
+       @media (max-width: 1280px) {
+            .blog-list {
+                max-width: 90%; /* 小屏幕下用90%宽度，避免贴边 */
+            }
         }
 
         .blog-card {
@@ -250,6 +255,11 @@
             }
         }
     </style>
+    <!-- 引入Markdown解析库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 引入代码高亮库（可选） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 </head>
 <body>
 
@@ -289,23 +299,56 @@
             <p style="margin-top:8px">© 2026 AlexCuiDev</p>
         </div>
     </footer>
+
     <script>
-    // 纯静态文章列表 —— 100% 能显示
-    document.addEventListener('DOMContentLoaded', function(){
-        const list = document.getElementById('postList');
-        
-        list.innerHTML = `
-        <div class="blog-card">
-            <div class="blog-meta">
-                <span>2026-05-21</span>
-                <span class="tag">CATIA开发</span>
-            </div>
-            <h2><a href="posts/test-post.html">我的第一篇技术博客</a></h2>
-            <div class="blog-excerpt">分享CATIA二次开发的第一个实践记录</div>
-            <a href="posts/test-post.html" class="blog-readmore">阅读全文 →</a>
-        </div>
-        `;
-    });
+        // 初始化代码高亮
+        hljs.highlightAll();
+
+        // 从posts.json加载文章列表
+        document.addEventListener('DOMContentLoaded', async function() {
+            const postListEl = document.getElementById('postList');
+            
+            try {
+                // 读取posts.json文件
+                const response = await fetch('posts.json');
+                if (!response.ok) throw new Error('加载文章列表失败');
+                
+                const posts = await response.json();
+                
+                // 生成博客列表HTML
+                if (posts.length === 0) {
+                    postListEl.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">暂无文章</p>';
+                    return;
+                }
+
+                let blogListHtml = '';
+                posts.forEach(post => {
+                    blogListHtml += `
+                    <div class="blog-card">
+                        <div class="blog-meta">
+                            <span>${post.date}</span>
+                            <span class="tag">${post.tag}</span>
+                        </div>
+                        <h2><a href="post-viewer.html?file=${post.filename}">${post.title}</a></h2>
+                        <div class="blog-excerpt">${post.desc}</div>
+                        <a href="post-viewer.html?file=${post.filename}" class="blog-readmore">阅读全文 →</a>
+                    </div>
+                    `;
+                });
+
+                postListEl.innerHTML = blogListHtml;
+
+            } catch (error) {
+                // 加载失败显示错误提示
+                postListEl.innerHTML = `
+                <div class="error-message">
+                    <p>❌ 文章列表加载失败: ${error.message}</p>
+                    <button class="retry-btn" onclick="window.location.reload()">重试</button>
+                </div>
+                `;
+                console.error('加载博客列表出错:', error);
+            }
+        });
     </script>
 </body>
 </html>
