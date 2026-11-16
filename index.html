@@ -1,742 +1,629 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>崔小建 | CATIA二次开发 & BIM开发工程师</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>崔小建 | CATIA 二次开发 &amp; BIM 开发工程师</title>
+<meta name="description" content="崔小建，CATIA 二次开发与 BIM 正向设计工程师，现居上海。擅长桥梁 BIM 正向设计、标准化构件、自动化工具与工程软件研发，拥有 4 项授权发明专利、6 项软件著作权、4 篇学术论文与专著、8 项国家级 BIM 竞赛奖项。">
+<meta name="theme-color" content="#0b0e14">
+<meta name="author" content="崔小建">
+<link rel="canonical" href="https://alexcuidev.github.io/">
 
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --accent: #58a6ff;
-            --border: #30363d;
-            --radius: 10px;
-        }
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AlexCuiDev">
+<meta property="og:title" content="崔小建 | CATIA 二次开发 &amp; BIM 开发工程师">
+<meta property="og:description" content="CATIA 二次开发与 BIM 正向设计工程师。4 项发明专利 · 6 项软著 · 4 篇论文 · 8 项国家级 BIM 奖项。">
+<meta property="og:url" content="https://alexcuidev.github.io/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://alexcuidev.github.io/images/hero-bridge.webp">
+<meta name="twitter:card" content="summary_large_image">
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            padding-top: 70px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-
-        /* 导航 */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(13,17,23,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 999;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-left: 24px;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        /* 主页区域 */
-        .hero {
-            min-height: calc(100vh - 70px);
-            display: flex;
-            align-items: center;
-            padding: 40px 0;
-        }
-
-        .hero-inner {
-            width: 100%;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .badge-dot {
-            width: 8px;
-            height: 8px;
-            background: #2da850;
-            border-radius: 50%;
-        }
-
-        h1 {
-            font-size: 48px;
-            margin-bottom: 12px;
-            line-height: 1.2;
-        }
-
-        .gradient {
-            color: var(--accent);
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .desc {
-            font-size: 16px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-
-        .Email {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 40px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: var(--radius);
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.2s;
-            font-size: 15px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .btn-secondary {
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-secondary);
-        }
-
-        /* 区块通用 */
-        .section {
-            padding: 80px 0;
-            border-top: 1px solid var(--border);
-            overflow: visible !important;
-        }
-
-        .section-title {
-            font-size: 28px;
-            margin-bottom: 12px;
-        }
-
-        .section-desc {
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            max-width: 700px;
-        }
-
-        /* 卡片 */
-        .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 16px;
-        }
-
-        .card h3 {
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        /* 成果展示：横向滚动 - 修复版 */
-        .scroll-wrapper {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .scroll-container {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0 0 20px 0;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent) var(--bg-secondary);
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-        }
-
-        .scroll-container::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .scroll-container::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 10px;
-        }
-
-        .scroll-container::-webkit-scrollbar-thumb {
-            background-color: var(--accent);
-            border-radius: 10px;
-        }
-
-        .work-card {
-            flex: 0 0 280px;
-            width: 280px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .work-card.paper {
-            cursor: pointer;
-        }
-
-        .work-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);
-        }
-
-        .work-img {
-            width: 100%;
-            height: 140px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            overflow: hidden;
-            flex-shrink: 0;
-            cursor: zoom-in; /* 鼠标样式变为放大 */
-        }
-
-        .work-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-            transition: transform 0.3s ease;
-        }
-
-        .work-card:hover .work-img img {
-            transform: scale(1.05);
-        }
-
-        .work-card h4 {
-            font-size: 16px;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            flex-shrink: 0;
-        }
-
-        .work-card p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        /* 图片预览弹窗样式 */
-        .image-preview-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
-        }
-
-        .image-preview-modal.active {
-            display: flex;
-        }
-
-        .preview-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-        }
-
-        .preview-img {
-            max-width: 100%;
-            max-height: 90vh;
-            border-radius: 8px;
-        }
-
-        .close-preview {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-
-        .close-preview:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            h1 {
-                font-size: 32px;
-            }
-            .nav-links a {
-                margin-left: 12px;
-                font-size: 14px;
-            }
-            .work-card {
-                flex: 0 0 240px;
-                width: 240px;
-                padding: 16px;
-            }
-            .work-img {
-                height: 120px;
-            }
-            .section {
-                padding: 60px 0;
-            }
-            .close-preview {
-                top: -30px;
-                font-size: 24px;
-                width: 30px;
-                height: 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .work-card {
-                flex: 0 0 220px;
-                width: 220px;
-            }
-            .nav-links a {
-                margin-left: 8px;
-            }
-            .logo {
-                font-size: 16px;
-            }
-        }
-    </style>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/main.css">
 </head>
-
 <body>
-    <header>
-        <div class="container nav">
-            <div class="logo">AlexCuiDev</div>
-            <div class="nav-links">
-                <a href="#home">首页</a>
-                <a href="#about">关于我</a>
-                <a href="#skills">技能</a>
-                <a href="#experience">经历</a>
-                <a href="#works">成果展示</a>
-                <a href="blog/index.html">博客</a>
-                <a href="https://github.com/AlexCuiDev" target="_blank">GitHub</a>
-            </div>
-        </div>
-    </header>
 
-    <!-- 首页 -->
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="logo" href="#home" aria-label="AlexCuiDev 首页">
+            <span class="logo-mark" aria-hidden="true">AC</span>
+            <span class="logo-text">AlexCuiDev</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="展开导航菜单">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+
+        <nav class="nav-links" id="siteNav" aria-label="主导航">
+            <a href="#home">首页</a>
+            <a href="#about">关于我</a>
+            <a href="#skills">专业技能</a>
+            <a href="#experience">工作经历</a>
+            <a href="#works">成果展示</a>
+            <a href="blog/index.html">博客</a>
+            <a href="https://github.com/AlexCuiDev" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">↗</span></a>
+        </nav>
+    </div>
+</header>
+
+<main id="main">
+
+    <!-- ============ 首屏 ============ -->
     <section class="hero" id="home">
-        <div class="container hero-inner">
-            <div class="badge">
-                <span class="badge-dot"></span>
-                <span>CATIA二次开发 / BIM开发工程师</span>
+        <div class="container hero-grid">
+            <div class="hero-copy">
+                <p class="kicker"><span class="status-dot" aria-hidden="true"></span>CATIA 二次开发 / BIM 开发工程师</p>
+                <h1>你好，我是 <span class="grad">崔小建</span></h1>
+                <p class="hero-sub">专注于 CATIA 开发、BIM 正向设计、工程数字化</p>
+                <p class="hero-desc">现居中国上海，拥有多年 CATIA 二次开发、BIM 工程实践经验，擅长桥梁设计、标准化构件、自动化工具与工程软件研发。</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://github.com/AlexCuiDev" target="_blank" rel="noopener">访问 GitHub</a>
+                    <a class="btn btn-ghost" href="#about">了解更多</a>
+                </div>
+                <a class="hero-mail" href="mailto:cuixiaojianok@outlook.com">cuixiaojianok@outlook.com</a>
             </div>
-            <h1>你好，我是 <span class="gradient">崔小建</span></h1>
-            <div class="subtitle">专注于 CATIA 开发、BIM 正向设计、工程数字化</div>
-            <div class="desc">
-                现居中国上海，拥有多年 CATIA 二次开发、BIM 工程实践经验，擅长桥梁设计、标准化构件、自动化工具与工程软件研发。
-            </div>
-            <!-- 优化邮箱交互（原Email类div替换） -->
-            <div class="Email">
-            <a href="mailto:cuixiaojianok@outlook.com" style="color:var(--text-secondary); text-decoration:none;">
-                cuixiaojianok@outlook.com
-            </a>
-            </div>
-            <div class="buttons">
-                <a href="https://github.com/AlexCuiDev" target="_blank" class="btn btn-primary">访问 GitHub</a>
-                <a href="#about" class="btn btn-secondary">了解更多</a>
-            </div>
+
+            <figure class="hero-media reveal">
+                <div class="viewport">
+                    <div class="viewport-bar">
+                        <span class="vp-title">新典桥 · BIM 正向设计</span>
+                        <span class="vp-meta">3DEXPERIENCE</span>
+                    </div>
+                    <img src="images/hero-bridge.webp" alt="新典桥 BIM 正向设计模型：拱形主拱与吊索体系的三维模型视图">
+                </div>
+                <figcaption>代表作 · 新典桥 BIM 正向设计项目 <span>桥梁 BIM 工程师</span></figcaption>
+            </figure>
+        </div>
+
+        <div class="container">
+            <ul class="stat-strip reveal">
+                <li><b>4</b><span>授权发明专利</span></li>
+                <li><b>6</b><span>软件著作权</span></li>
+                <li><b>4</b><span>学术论文 / 专著</span></li>
+                <li><b>4</b><span>BIM 正向设计项目</span></li>
+                <li><b>8</b><span>国家级 BIM 奖项</span></li>
+            </ul>
         </div>
     </section>
 
-    <!-- 关于我 -->
+    <!-- ============ 关于我 ============ -->
     <section class="section" id="about">
         <div class="container">
-            <h2 class="section-title">关于我</h2>
-            <p class="section-desc">CATIA 二次开发专家 | BIM 开发工程师 | 工程数字化实践者</p>
-            <div class="grid">
-                <div class="card">
-                    <h3>个人背景</h3>
-                    <p>中共党员，现居上海，工程数字化领域资深从业者</p>
+            <header class="section-head reveal">
+                <p class="kicker">/ about</p>
+                <h2>关于我</h2>
+                <p class="section-desc">CATIA 二次开发专家 | BIM 开发工程师 | 工程数字化实践者</p>
+            </header>
+
+            <div class="about-grid">
+                <div class="about-lede reveal">
+                    <p>中共党员，现居上海，工程数字化领域资深从业者。从施工技术管理出发，走过大型桥梁 BIM 正向设计与课题研究，最终进入达索生态做二次开发与行业方案——完整走过「设计 → 研发 → 实施 → 售前」的全链路。</p>
+                    <ul class="trail">
+                        <li><span class="dot" aria-hidden="true"></span><span class="year">2016</span> 中铁四局 · 施工技术管理</li>
+                        <li><span class="dot" aria-hidden="true"></span><span class="year">2018</span> 同济设计院 · BIM 正向设计</li>
+                        <li><span class="dot" aria-hidden="true"></span><span class="year">2025</span> 达索代理商 · AEC 技术总监</li>
+                    </ul>
                 </div>
-                <div class="card">
-                    <h3>核心技术</h3>
-                    <p>CATIA二次开发（EKL/C#）、BIM正向设计、自动化工具开发</p>
-                </div>
-                <div class="card">
-                    <h3>职业历程</h3>
-                    <p>中铁四局、同济设计院、达索代理商，历任技术总监/BIM工程师</p>
-                </div>
-                <div class="card">
-                    <h3>成果能力</h3>
-                    <p>多项专利软著与国家级奖项，擅长技术方案与项目落地</p>
+
+                <div class="info-grid">
+                    <div class="info-card reveal" data-delay="1">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+                        </div>
+                        <h3>个人背景</h3>
+                        <p>中共党员，现居上海，工程数字化领域资深从业者</p>
+                    </div>
+                    <div class="info-card reveal" data-delay="2">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
+                        </div>
+                        <h3>核心技术</h3>
+                        <p>CATIA 二次开发（EKL / C#）、BIM 正向设计、自动化工具开发</p>
+                    </div>
+                    <div class="info-card reveal" data-delay="3">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>
+                        </div>
+                        <h3>职业历程</h3>
+                        <p>中铁四局、同济设计院、达索代理商，历任技术总监 / BIM 工程师</p>
+                    </div>
+                    <div class="info-card reveal" data-delay="4">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.2 14.3-1.4 7 5.2-2.8 5.2 2.8-1.4-7"/></svg>
+                        </div>
+                        <h3>成果能力</h3>
+                        <p>多项专利软著与国家级奖项，擅长技术方案与项目落地</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 技能 -->
+    <!-- ============ 专业技能 ============ -->
     <section class="section" id="skills">
         <div class="container">
-            <h2 class="section-title">专业技能</h2>
-            <p class="section-desc">我擅长的技术栈与能力</p>
-            <div class="grid">
-                <div class="card">
-                    <h3>CATIA 二次开发</h3>
-                    <p>EKL、C#、自动化建模、批量处理、插件开发、达索生态集成</p>
+            <header class="section-head reveal">
+                <p class="kicker">/ skills</p>
+                <h2>专业技能</h2>
+                <p class="section-desc">我擅长的技术栈与能力</p>
+            </header>
+
+            <div class="skill-grid">
+                <div class="skill-card reveal">
+                    <div class="skill-head">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 22V12"/></svg>
+                        </div>
+                        <h3>CATIA 二次开发</h3>
+                    </div>
+                    <p>基于达索平台的自动化建模与批量处理能力，把重复劳动沉淀成可复用的工具与规则模板。</p>
+                    <div class="chips">
+                        <span class="chip">EKL</span><span class="chip">C#</span><span class="chip">自动化建模</span>
+                        <span class="chip">批量处理</span><span class="chip">插件开发</span><span class="chip">达索生态集成</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>BIM 正向设计</h3>
-                    <p>桥梁 BIM、钢结构设计、预制构件、标准化、全过程 BIM 咨询</p>
+
+                <div class="skill-card reveal" data-delay="1">
+                    <div class="skill-head">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></svg>
+                        </div>
+                        <h3>BIM 正向设计</h3>
+                    </div>
+                    <p>从参数化建模到出图交付的完整正向设计流程，熟悉桥梁与钢结构的工程表达习惯。</p>
+                    <div class="chips">
+                        <span class="chip">桥梁 BIM</span><span class="chip">钢结构设计</span><span class="chip">预制构件</span>
+                        <span class="chip">标准化</span><span class="chip">全过程 BIM 咨询</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>工程软件研发</h3>
-                    <p>需求分析、架构设计、插件开发、项目实施、技术攻关</p>
+
+                <div class="skill-card reveal" data-delay="2">
+                    <div class="skill-head">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m6 9 3 3-3 3M13 15h5"/></svg>
+                        </div>
+                        <h3>工程软件研发</h3>
+                    </div>
+                    <p>能独立完成需求拆解、架构设计、编码实现到项目实施与技术攻关的完整闭环。</p>
+                    <div class="chips">
+                        <span class="chip">需求分析</span><span class="chip">架构设计</span><span class="chip">插件开发</span>
+                        <span class="chip">项目实施</span><span class="chip">技术攻关</span>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>平台与工具</h3>
-                    <p>欧特克、奔特利、广联达、CATIA、BIM 协同平台、自动化工具</p>
+
+                <div class="skill-card reveal" data-delay="3">
+                    <div class="skill-head">
+                        <div class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                        </div>
+                        <h3>平台与工具</h3>
+                    </div>
+                    <p>日常工作流里的主力平台，包括建模、算量、协同与自研自动化工具链。</p>
+                    <div class="chips">
+                        <span class="chip">CATIA</span><span class="chip">3DEXPERIENCE</span><span class="chip">欧特克</span>
+                        <span class="chip">奔特利</span><span class="chip">广联达</span><span class="chip">BIM 协同平台</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 工作经历 -->
+    <!-- ============ 工作经历 ============ -->
     <section class="section" id="experience">
         <div class="container">
-            <h2 class="section-title">工作经历</h2>
-            <p class="section-desc">我的职业历程</p>
+            <header class="section-head reveal">
+                <p class="kicker">/ experience</p>
+                <h2>工作经历</h2>
+                <p class="section-desc">我的职业历程</p>
+            </header>
 
-            <div class="card">
-                <h3>上海慧广科技发展有限公司 | AEC 技术总监</h3>
-                <p>2025.02 - 至今</p>
-                <p>达索代理商，负责行业方案、售前支持、技术攻关、项目管理</p>
-            </div>
+            <div class="timeline">
+                <article class="tl-item reveal">
+                    <span class="tl-date">2025.02 — 至今</span>
+                    <h3>AEC 技术总监</h3>
+                    <p class="tl-org">上海慧广科技发展有限公司</p>
+                    <p class="section-desc">达索代理商，负责行业方案、售前支持、技术攻关、项目管理</p>
+                    <div class="tl-tags">
+                        <span class="chip">行业方案</span><span class="chip">售前支持</span>
+                        <span class="chip">技术攻关</span><span class="chip">项目管理</span>
+                    </div>
+                </article>
 
-            <div class="card">
-                <h3>同济大学建筑设计研究院 | BIM 开发工程师</h3>
-                <p>2018.11 - 2025.02</p>
-                <p>大型桥梁 BIM 正向设计、项目落地、课题研究、成果转化</p>
-            </div>
+                <article class="tl-item reveal" data-delay="1">
+                    <span class="tl-date">2018.11 — 2025.02</span>
+                    <h3>BIM 开发工程师</h3>
+                    <p class="tl-org">同济大学建筑设计研究院</p>
+                    <p class="section-desc">大型桥梁 BIM 正向设计、项目落地、课题研究、成果转化</p>
+                    <div class="tl-tags">
+                        <span class="chip">桥梁正向设计</span><span class="chip">项目落地</span>
+                        <span class="chip">课题研究</span><span class="chip">成果转化</span>
+                    </div>
+                </article>
 
-            <div class="card">
-                <h3>中铁四局集团上海工程有限公司 | 技术主管</h3>
-                <p>2016.07 - 2018.11</p>
-                <p>施工技术管理、BIM 咨询、跨团队协作、项目统筹</p>
+                <article class="tl-item reveal" data-delay="2">
+                    <span class="tl-date">2016.07 — 2018.11</span>
+                    <h3>技术主管</h3>
+                    <p class="tl-org">中铁四局集团上海工程有限公司</p>
+                    <p class="section-desc">施工技术管理、BIM 咨询、跨团队协作、项目统筹</p>
+                    <div class="tl-tags">
+                        <span class="chip">施工技术管理</span><span class="chip">BIM 咨询</span>
+                        <span class="chip">跨团队协作</span><span class="chip">项目统筹</span>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- 成果展示 -->
+    <!-- ============ 成果展示 ============ -->
     <section class="section" id="works">
         <div class="container">
-            <h2 class="section-title">成果展示</h2>
-            <p class="section-desc">学术论文 · 授权专利 · 软件著作权 · 工程项目 · 荣誉证书</p>
+            <header class="section-head reveal">
+                <p class="kicker">/ works</p>
+                <h2>成果展示</h2>
+                <p class="section-desc">学术论文 · 授权专利 · 软件著作权 · 工程项目 · 荣誉证书</p>
+            </header>
 
-            <!-- 学术论文（可点击PDF） -->
-            <h3 style="margin:20px 0 12px; color:var(--accent)">📄 学术论文</h3>
-            <div class="scroll-wrapper">
-                <div class="scroll-container">
-                    <div class="work-card paper" onclick="window.open('docs/paper02.pdf')">
-                        <div class="work-img" onclick="previewImage('images/paper02.webp', event)">
-                            <img src="images/paper02.webp" alt="论文封面2">
-                        </div>
-                        <h4>基于3DE平台的下部结构BIM模型快速创建系统</h4>
-                        <p>行业期刊 | 2021 | 第一作者</p>
+            <!-- 学术论文 -->
+            <div class="works-group reveal">
+                <div class="works-head">
+                    <h3>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5M9 13h6M9 17h6"/></svg>
+                        学术论文
+                    </h3>
+                    <span class="works-count">4 篇</span>
+                    <div class="works-nav">
+                        <button class="rail-btn rail-btn--prev" type="button" aria-label="上一组学术论文">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button class="rail-btn rail-btn--next" type="button" aria-label="下一组学术论文">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
                     </div>
-                    <div class="work-card paper" onclick="window.open('docs/paper01.pdf')">
-                        <div class="work-img" onclick="previewImage('images/paper01.webp', event)">
-                            <img src="images/paper01.webp" alt="论文封面1">
-                        </div>
-                        <h4>钢混组合梁多尺度BIM正向设计研究</h4>
-                        <p>核心期刊 | 2022 | 开发人员</p>
-                    </div>
-                    <div class="work-card paper" onclick="window.open('docs/paper03.pdf')">
-                        <div class="work-img" onclick="previewImage('images/paper03.webp', event)">
-                            <img src="images/paper03.webp" alt="论文封面1">
-                        </div>
-                        <h4>基于BIM和快速施工的城市高架预制钢混组合梁桥设计系统研发</h4>
-                        <p>核心期刊 | 2023 | 开发人员</p>
-                    </div>
-                    <div class="work-card paper" onclick="window.open('docs/paper04.pdf')">
-                        <div class="work-img" onclick="previewImage('images/paper04.webp', event)">
-                            <img src="images/paper04.webp" alt="论文封面1">
-                        </div>
-                        <h4>BIM经理 BIM项目管理指南</h4>
-                        <p>专著 | 2024 | 参与编写</p>
+                </div>
+                <div class="rail">
+                    <div class="rail-track">
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/paper02.webp" data-alt="基于3DE平台的下部结构BIM模型快速创建系统 · 论文封面">
+                                <img src="images/paper02.webp" alt="基于3DE平台的下部结构BIM模型快速创建系统 论文封面" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4><a href="docs/paper02.pdf" target="_blank" rel="noopener">基于3DE平台的下部结构BIM模型快速创建系统</a></h4>
+                                <div class="work-meta">
+                                    <span>行业期刊</span><span>2021</span><span>第一作者</span>
+                                    <a class="link" href="docs/paper02.pdf" target="_blank" rel="noopener">PDF ↗</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/paper01.webp" data-alt="钢混组合梁多尺度BIM正向设计研究 · 论文封面">
+                                <img src="images/paper01.webp" alt="钢混组合梁多尺度BIM正向设计研究 论文封面" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4><a href="docs/paper01.pdf" target="_blank" rel="noopener">钢混组合梁多尺度BIM正向设计研究</a></h4>
+                                <div class="work-meta">
+                                    <span>核心期刊</span><span>2022</span><span>开发人员</span>
+                                    <a class="link" href="docs/paper01.pdf" target="_blank" rel="noopener">PDF ↗</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/paper03.webp" data-alt="基于BIM和快速施工的城市高架预制钢混组合梁桥设计系统研发 · 论文封面">
+                                <img src="images/paper03.webp" alt="基于BIM和快速施工的城市高架预制钢混组合梁桥设计系统研发 论文封面" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4><a href="docs/paper03.pdf" target="_blank" rel="noopener">基于BIM和快速施工的城市高架预制钢混组合梁桥设计系统研发</a></h4>
+                                <div class="work-meta">
+                                    <span>核心期刊</span><span>2023</span><span>开发人员</span>
+                                    <a class="link" href="docs/paper03.pdf" target="_blank" rel="noopener">PDF ↗</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/paper04.webp" data-alt="BIM经理 BIM项目管理指南 · 专著封面">
+                                <img src="images/paper04.webp" alt="BIM经理 BIM项目管理指南 专著封面" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4><a href="docs/paper04.pdf" target="_blank" rel="noopener">BIM经理 BIM项目管理指南</a></h4>
+                                <div class="work-meta">
+                                    <span>专著</span><span>2024</span><span>参与编写</span>
+                                    <a class="link" href="docs/paper04.pdf" target="_blank" rel="noopener">PDF ↗</a>
+                                </div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
 
-            <!-- 授权专利（仅图片） -->
-            <h3 style="margin:40px 0 12px; color:var(--accent)">🏅 授权专利</h3>
-            <div class="scroll-wrapper">
-                <div class="scroll-container">
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/zl01.webp', event)">
-                            <img src="images/zl01.webp" alt="专利证书1">
-                        </div>
-                        <h4>桥梁工程设计文件生成、装置、计算机设备和存储介质</h4>
-                        <p>发明专利 | 授权 | 专利号：CN202010277385.1 | 参与开发</p>
+            <!-- 授权专利 -->
+            <div class="works-group reveal">
+                <div class="works-head">
+                    <h3>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-3.6 8-10V5.5l-8-3-8 3V12c0 6.4 8 10 8 10z"/></svg>
+                        授权专利
+                    </h3>
+                    <span class="works-count">4 项发明专利</span>
+                    <div class="works-nav">
+                        <button class="rail-btn rail-btn--prev" type="button" aria-label="上一组授权专利">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button class="rail-btn rail-btn--next" type="button" aria-label="下一组授权专利">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
                     </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/zl02.webp', event)">
-                            <img src="images/zl02.webp" alt="专利证书2">
-                        </div>
-                        <h4>一种钢混组合梁结构骨架半自动设计方法及系统</h4>
-                        <p>发明专利 | 授权 | 专利号：CN202110516603.7 | 参与开发</p>
-                    </div>
-                     <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/zl03.webp', event)">
-                            <img src="images/zl03.webp" alt="专利证书3">
-                        </div>
-                        <h4>EICAD与IFC的路线数据自动转换方法、介质及系统</h4>
-                        <p>发明专利 | 授权 | 专利号：CN202011372224.7 | 参与开发</p>
-                    </div>
-                     <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/zl04.webp', event)">
-                            <img src="images/zl04.webp" alt="专利证书4">
-                        </div>
-                        <h4>一种基于BIM模型的线性工程漫游视频的制作方法及系统</h4>
-                        <p>发明专利 | 授权 | 专利号：CN202211000393.7 | 参与开发</p>
+                </div>
+                <div class="rail">
+                    <div class="rail-track">
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/zl01.webp" data-alt="桥梁工程设计文件生成、装置、计算机设备和存储介质 · 专利证书">
+                                <img src="images/zl01.webp" alt="桥梁工程设计文件生成、装置、计算机设备和存储介质 专利证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>桥梁工程设计文件生成、装置、计算机设备和存储介质</h4>
+                                <div class="work-meta"><span>发明专利 · 授权</span><span>CN202010277385.1</span><span>参与开发</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/zl02.webp" data-alt="一种钢混组合梁结构骨架半自动设计方法及系统 · 专利证书">
+                                <img src="images/zl02.webp" alt="一种钢混组合梁结构骨架半自动设计方法及系统 专利证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>一种钢混组合梁结构骨架半自动设计方法及系统</h4>
+                                <div class="work-meta"><span>发明专利 · 授权</span><span>CN202110516603.7</span><span>参与开发</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/zl03.webp" data-alt="EICAD与IFC的路线数据自动转换方法、介质及系统 · 专利证书">
+                                <img src="images/zl03.webp" alt="EICAD与IFC的路线数据自动转换方法、介质及系统 专利证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>EICAD与IFC的路线数据自动转换方法、介质及系统</h4>
+                                <div class="work-meta"><span>发明专利 · 授权</span><span>CN202011372224.7</span><span>参与开发</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/zl04.webp" data-alt="一种基于BIM模型的线性工程漫游视频的制作方法及系统 · 专利证书">
+                                <img src="images/zl04.webp" alt="一种基于BIM模型的线性工程漫游视频的制作方法及系统 专利证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>一种基于BIM模型的线性工程漫游视频的制作方法及系统</h4>
+                                <div class="work-meta"><span>发明专利 · 授权</span><span>CN202211000393.7</span><span>参与开发</span></div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
 
-            <!-- 软件著作权（仅图片） -->
-            <h3 style="margin:40px 0 12px; color:var(--accent)">💻 软件著作权</h3>
-            <div class="scroll-wrapper">
-                <div class="scroll-container">
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc01.webp', event)">
-                            <img src="images/scc01.webp" alt="软著证书1">
-                        </div>
-                        <h4>桥梁下部结构BIM模型快速创建系统[简称：TJAD-SCCB-2]V1.0</h4>
-                        <p>登记号：2021SR2180257</p>
+            <!-- 软件著作权 -->
+            <div class="works-group reveal">
+                <div class="works-head">
+                    <h3>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        软件著作权
+                    </h3>
+                    <span class="works-count">6 项</span>
+                    <div class="works-nav">
+                        <button class="rail-btn rail-btn--prev" type="button" aria-label="上一组软件著作权">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button class="rail-btn rail-btn--next" type="button" aria-label="下一组软件著作权">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
                     </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc02.webp', event)">
-                            <img src="images/scc02.webp" alt="软著证书2">
-                        </div>
-                        <h4>基于CATIA与BridgeWise的组合结构桥梁二三维数据交互程序[简称：TJAD-SCCB-7]VI.0</h4>
-                        <p>登记号：2023SR0898270</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc03.webp', event)">
-                            <img src="images/scc03.webp" alt="软著证书3">
-                        </div>
-                        <h4>基于CATIA与BridgeWise的梁式桥总体布置图快速出图程序[简称：TJAD-SCCB-6]V1.0</h4>
-                        <p>登记号：2023SR0898399</p>
-                    </div>
-                     <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc04.webp', event)">
-                            <img src="images/scc04.webp" alt="软著证书4">
-                        </div>
-                        <h4>基于3DE平台的IFC模型属性扩展程序[简称：IFC属性扩展]V1.0</h4>
-                        <p>登记号：2024SR0511323</p>
-                    </div>
-                     <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc05.webp', event)">
-                            <img src="images/scc05.webp" alt="软著证书5">
-                        </div>
-                        <h4>基于BIM国技术和快速化施工的预制钢混组合梁桥三维设计系统V1.0[简称：TJAD-SCCB-5]</h4>
-                        <p>登记号：2022SR1280931</p>
-                    </div>
-                     <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/scc06.webp', event)">
-                            <img src="images/scc06.webp" alt="软著证书6">
-                        </div>
-                        <h4>基于3DE平台的工程量信息提取及组织软件[简称：TJAD-SCCB-4]V1.0</h4>
-                        <p>登记号：2022SR0218181</p>
+                </div>
+                <div class="rail">
+                    <div class="rail-track">
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc01.webp" data-alt="桥梁下部结构BIM模型快速创建系统 V1.0 · 软著证书">
+                                <img src="images/scc01.webp" alt="桥梁下部结构BIM模型快速创建系统 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>桥梁下部结构BIM模型快速创建系统[简称：TJAD-SCCB-2]V1.0</h4>
+                                <div class="work-meta"><span>登记号</span><span>2021SR2180257</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc02.webp" data-alt="基于CATIA与BridgeWise的组合结构桥梁二三维数据交互程序 V1.0 · 软著证书">
+                                <img src="images/scc02.webp" alt="基于CATIA与BridgeWise的组合结构桥梁二三维数据交互程序 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>基于CATIA与BridgeWise的组合结构桥梁二三维数据交互程序[简称：TJAD-SCCB-7]V1.0</h4>
+                                <div class="work-meta"><span>登记号</span><span>2023SR0898270</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc03.webp" data-alt="基于CATIA与BridgeWise的梁式桥总体布置图快速出图程序 V1.0 · 软著证书">
+                                <img src="images/scc03.webp" alt="基于CATIA与BridgeWise的梁式桥总体布置图快速出图程序 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>基于CATIA与BridgeWise的梁式桥总体布置图快速出图程序[简称：TJAD-SCCB-6]V1.0</h4>
+                                <div class="work-meta"><span>登记号</span><span>2023SR0898399</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc04.webp" data-alt="基于3DE平台的IFC模型属性扩展程序 V1.0 · 软著证书">
+                                <img src="images/scc04.webp" alt="基于3DE平台的IFC模型属性扩展程序 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>基于3DE平台的IFC模型属性扩展程序[简称：IFC属性扩展]V1.0</h4>
+                                <div class="work-meta"><span>登记号</span><span>2024SR0511323</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc05.webp" data-alt="基于BIM国技术和快速化施工的预制钢混组合梁桥三维设计系统 V1.0 · 软著证书">
+                                <img src="images/scc05.webp" alt="基于BIM国技术和快速化施工的预制钢混组合梁桥三维设计系统 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>基于BIM国技术和快速化施工的预制钢混组合梁桥三维设计系统V1.0[简称：TJAD-SCCB-5]</h4>
+                                <div class="work-meta"><span>登记号</span><span>2022SR1280931</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/scc06.webp" data-alt="基于3DE平台的工程量信息提取及组织软件 V1.0 · 软著证书">
+                                <img src="images/scc06.webp" alt="基于3DE平台的工程量信息提取及组织软件 V1.0 软著证书" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>基于3DE平台的工程量信息提取及组织软件[简称：TJAD-SCCB-4]V1.0</h4>
+                                <div class="work-meta"><span>登记号</span><span>2022SR0218181</span></div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
 
-            <!-- 工程项目（仅图片） -->
-            <h3 style="margin:40px 0 12px; color:var(--accent)">🏗️ 工程项目</h3>
-            <div class="scroll-wrapper">
-                <div class="scroll-container">
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/project01.webp', event)">
-                            <img src="images/project01.webp" alt="项目图1">
-                        </div>
-                        <h4>神农湖大桥BIM正向设计项目</h4>
-                        <p>桥梁BIM工程师</p>
+            <!-- 工程项目 -->
+            <div class="works-group reveal">
+                <div class="works-head">
+                    <h3>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V6l8-3 8 3v15"/><path d="M9 21v-4h6v4M8 9h1M15 9h1M8 13h1M15 13h1"/></svg>
+                        工程项目
+                    </h3>
+                    <span class="works-count">4 个</span>
+                    <div class="works-nav">
+                        <button class="rail-btn rail-btn--prev" type="button" aria-label="上一组工程项目">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button class="rail-btn rail-btn--next" type="button" aria-label="下一组工程项目">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
                     </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/project02.webp', event)">
-                            <img src="images/project02.webp" alt="项目图2">
-                        </div>
-                        <h4>新典桥BIM正向设计项目</h4>
-                        <p>桥梁BIM工程师</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/project03.webp', event)">
-                            <img src="images/project03.webp" alt="项目图3">
-                        </div>
-                        <h4>菏泽长江路高架桥BIM正向设计项目</h4>
-                        <p>桥梁BIM工程师</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/project04.webp', event)">
-                            <img src="images/project04.webp" alt="项目图4">
-                        </div>
-                        <h4>钢混组合梁桥正向设计系统研发</h4>
-                        <p>桥梁BIM开发工程师</p>
+                </div>
+                <div class="rail">
+                    <div class="rail-track">
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/project01.webp" data-alt="神农湖大桥BIM正向设计项目">
+                                <img src="images/project01.webp" alt="神农湖大桥BIM正向设计项目" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>神农湖大桥BIM正向设计项目</h4>
+                                <div class="work-meta"><span>桥梁BIM工程师</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/project02.webp" data-alt="新典桥BIM正向设计项目">
+                                <img src="images/project02.webp" alt="新典桥BIM正向设计项目" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>新典桥BIM正向设计项目</h4>
+                                <div class="work-meta"><span>桥梁BIM工程师</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/project03.webp" data-alt="菏泽长江路高架桥BIM正向设计项目">
+                                <img src="images/project03.webp" alt="菏泽长江路高架桥BIM正向设计项目" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>菏泽长江路高架桥BIM正向设计项目</h4>
+                                <div class="work-meta"><span>桥梁BIM工程师</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/project04.webp" data-alt="钢混组合梁桥正向设计系统研发">
+                                <img src="images/project04.webp" alt="钢混组合梁桥正向设计系统研发" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>钢混组合梁桥正向设计系统研发</h4>
+                                <div class="work-meta"><span>桥梁BIM开发工程师</span></div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
 
-            <!-- 🔥 新增：荣誉证书（仅图片） -->
-            <h3 style="margin:40px 0 12px; color:var(--accent)">🏆 荣誉证书</h3>
-            <div class="scroll-wrapper">
-                <div class="scroll-container">
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award01.webp', event)">
-                            <img src="images/award01.webp" alt="荣誉证书1">
-                        </div>
-                        <h4>第九届全国 BIM 大赛（龙图杯）设计组 一等奖</h4>
-                        <p>中国图学学会 | 2022年</p>
+            <!-- 荣誉证书 -->
+            <div class="works-group reveal">
+                <div class="works-head">
+                    <h3>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M9 21h6"/></svg>
+                        荣誉证书
+                    </h3>
+                    <span class="works-count">8 项</span>
+                    <div class="works-nav">
+                        <button class="rail-btn rail-btn--prev" type="button" aria-label="上一组荣誉证书">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button class="rail-btn rail-btn--next" type="button" aria-label="下一组荣誉证书">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
                     </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award02.webp', event)">
-                            <img src="images/award02.webp" alt="荣誉证书2">
-                        </div>
-                        <h4>第十二届“创新杯”建筑信息模型（BIM）应用大赛市政工程类BIM应用一等成果</h4>
-                        <p>中国勘察设计协会、欧特克软件（中国）有限公司 | 2023年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award03.webp', event)">
-                            <img src="images/award03.webp" alt="荣誉证书3">
-                        </div>
-                        <h4>第三届“市政杯”BIM应用技能大赛一类成果（设计单项组）</h4>
-                        <p>中国市政工程协会 | 2021年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award04.webp', event)">
-                            <img src="images/award04.webp" alt="荣誉证书4">
-                        </div>
-                        <h4>第四届“市政杯”BIM应用技能大赛二类成果（设计组）</h4>
-                        <p>中国市政工程协会 | 2022年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award05.webp', event)">
-                            <img src="images/award05.webp" alt="荣誉证书5">
-                        </div>
-                        <h4>第九届全国BIM大赛（龙图杯）设计组一等奖</h4>
-                        <p>中国图学学会 | 2022年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award06.webp', event)">
-                            <img src="images/award06.webp" alt="荣誉证书6">
-                        </div>
-                        <h4>第十届“创新杯”建筑信息模型（BIM）应用大赛市政交通类BIM应用第三名</h4>
-                        <p>中国勘察设计协会、欧特克软件（中国）有限公司 | 2021年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award07.webp', event)">
-                            <img src="images/award07.webp" alt="荣誉证书7">
-                        </div>
-                        <h4>第十一届全国BIM大赛（龙图杯）设计组三等奖</h4>
-                        <p>中国图学学会 | 2024年</p>
-                    </div>
-                    <div class="work-card">
-                        <div class="work-img" onclick="previewImage('images/award08.webp', event)">
-                            <img src="images/award08.webp" alt="荣誉证书8">
-                        </div>
-                        <h4>第十三届“创新杯”建筑信息模型应用大赛市政工程类BIM应用三等成果</h4>
-                        <p>中国勘察设计协会 | 2024年</p>
+                </div>
+                <div class="rail">
+                    <div class="rail-track">
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award01.webp" data-alt="第九届全国BIM大赛（龙图杯）设计组 一等奖">
+                                <img src="images/award01.webp" alt="第九届全国BIM大赛（龙图杯）设计组 一等奖" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第九届全国 BIM 大赛（龙图杯）设计组 一等奖</h4>
+                                <div class="work-meta"><span>中国图学学会</span><span>2022年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award02.webp" data-alt="第十二届创新杯建筑信息模型应用大赛市政工程类BIM应用一等成果">
+                                <img src="images/award02.webp" alt="第十二届创新杯建筑信息模型应用大赛市政工程类BIM应用一等成果" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第十二届“创新杯”建筑信息模型（BIM）应用大赛市政工程类BIM应用一等成果</h4>
+                                <div class="work-meta"><span>中国勘察设计协会 · 欧特克</span><span>2023年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award03.webp" data-alt="第三届市政杯BIM应用技能大赛一类成果（设计单项组）">
+                                <img src="images/award03.webp" alt="第三届市政杯BIM应用技能大赛一类成果（设计单项组）" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第三届“市政杯”BIM应用技能大赛一类成果（设计单项组）</h4>
+                                <div class="work-meta"><span>中国市政工程协会</span><span>2021年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award04.webp" data-alt="第四届市政杯BIM应用技能大赛二类成果（设计组）">
+                                <img src="images/award04.webp" alt="第四届市政杯BIM应用技能大赛二类成果（设计组）" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第四届“市政杯”BIM应用技能大赛二类成果（设计组）</h4>
+                                <div class="work-meta"><span>中国市政工程协会</span><span>2022年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award05.webp" data-alt="第九届全国BIM大赛（龙图杯）设计组一等奖">
+                                <img src="images/award05.webp" alt="第九届全国BIM大赛（龙图杯）设计组一等奖" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第九届全国BIM大赛（龙图杯）设计组一等奖</h4>
+                                <div class="work-meta"><span>中国图学学会</span><span>2022年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award06.webp" data-alt="第十届创新杯BIM应用大赛市政交通类BIM应用第三名">
+                                <img src="images/award06.webp" alt="第十届创新杯BIM应用大赛市政交通类BIM应用第三名" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第十届“创新杯”建筑信息模型（BIM）应用大赛市政交通类BIM应用第三名</h4>
+                                <div class="work-meta"><span>中国勘察设计协会 · 欧特克</span><span>2021年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award07.webp" data-alt="第十一届全国BIM大赛（龙图杯）设计组三等奖">
+                                <img src="images/award07.webp" alt="第十一届全国BIM大赛（龙图杯）设计组三等奖" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第十一届全国BIM大赛（龙图杯）设计组三等奖</h4>
+                                <div class="work-meta"><span>中国图学学会</span><span>2024年</span></div>
+                            </div>
+                        </article>
+                        <article class="work-card">
+                            <button class="work-media" type="button" data-lightbox="images/award08.webp" data-alt="第十三届创新杯BIM应用大赛市政工程类BIM应用三等成果">
+                                <img src="images/award08.webp" alt="第十三届创新杯BIM应用大赛市政工程类BIM应用三等成果" loading="lazy">
+                            </button>
+                            <div class="work-body">
+                                <h4>第十三届“创新杯”建筑信息模型应用大赛市政工程类BIM应用三等成果</h4>
+                                <div class="work-meta"><span>中国勘察设计协会</span><span>2024年</span></div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
@@ -744,92 +631,56 @@
         </div>
     </section>
 
-    <!-- 底部 -->
-    <footer style="padding:40px 0; border-top:1px solid var(--border); text-align:center; color:var(--text-secondary)">
-        <div class="container">
-            <p>崔小建 | CATIA二次开发 & BIM开发工程师 | 中国上海</p>
-            <p style="margin-top:8px">© 2026 AlexCuiDev</p>
-        </div>
-    </footer>
+</main>
 
-    <!-- 图片预览弹窗 -->
-    <div class="image-preview-modal" id="imagePreviewModal" onclick="closePreview()">
-        <div class="preview-content" onclick="event.stopPropagation()">
-            <span class="close-preview" onclick="closePreview()">&times;</span>
-            <img src="" alt="预览图片" class="preview-img" id="previewImg">
+<footer class="site-footer">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <a class="logo" href="#home">
+                <span class="logo-mark" aria-hidden="true">AC</span>
+                <span class="logo-text">AlexCuiDev</span>
+            </a>
+            <p>CATIA 二次开发 &amp; BIM 开发工程师，中国上海。从设计到研发，做能落地的工程数字化工具。</p>
+        </div>
+        <div class="footer-col">
+            <h4>导航</h4>
+            <ul>
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#skills">专业技能</a></li>
+                <li><a href="#experience">工作经历</a></li>
+                <li><a href="#works">成果展示</a></li>
+                <li><a href="blog/index.html">技术博客</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>联系</h4>
+            <ul>
+                <li><a href="mailto:cuixiaojianok@outlook.com">cuixiaojianok@outlook.com</a></li>
+                <li><a href="https://github.com/AlexCuiDev" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="docs/paper02.pdf" target="_blank" rel="noopener">代表论文 PDF ↗</a></li>
+                <li><a href="docs/paper04.pdf" target="_blank" rel="noopener">《BIM经理》专著 ↗</a></li>
+            </ul>
         </div>
     </div>
+    <div class="container footer-bottom">
+        <span>© <span data-year>2026</span> AlexCuiDev</span>
+        <span>CATIA 二次开发 / BIM 正向设计 / 工程数字化</span>
+    </div>
+</footer>
 
-    <!-- 脚本 -->
-    <script>
-    // 丝滑拖动滚动脚本
-    document.addEventListener('DOMContentLoaded', function() {
-      const scrollContainers = document.querySelectorAll('.scroll-container');
-      
-      scrollContainers.forEach(container => {
-        container.style.scrollBehavior = 'smooth';
-        
-        let isDragging = false;
-        let startX;
-        let scrollLeft;
+<button class="to-top" type="button" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
-        container.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          container.style.cursor = 'grabbing';
-          startX = e.pageX - container.offsetLeft;
-          scrollLeft = container.scrollLeft;
-        });
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片预览" aria-hidden="true">
+    <figure class="lightbox-figure">
+        <button class="lightbox-close" type="button" aria-label="关闭预览">&times;</button>
+        <img id="lightboxImg" src="" alt="">
+        <figcaption class="lightbox-cap" id="lightboxCap"></figcaption>
+    </figure>
+</div>
 
-        container.addEventListener('mouseleave', () => {
-          isDragging = false;
-          container.style.cursor = 'grab';
-        });
-
-        container.addEventListener('mouseup', () => {
-          isDragging = false;
-          container.style.cursor = 'grab';
-        });
-
-        container.addEventListener('mousemove', (e) => {
-          if (!isDragging) return;
-          e.preventDefault();
-          const x = e.pageX - container.offsetLeft;
-          const walk = (x - startX) * 1.2;
-          container.scrollLeft = scrollLeft - walk;
-        });
-      });
-    });
-
-    // 图片预览功能
-    function previewImage(imgSrc, event) {
-        // 阻止事件冒泡，避免触发论文卡片的PDF打开事件
-        event.stopPropagation();
-        
-        const modal = document.getElementById('imagePreviewModal');
-        const previewImg = document.getElementById('previewImg');
-        
-        previewImg.src = imgSrc;
-        modal.classList.add('active');
-        
-        // 禁止页面滚动
-        document.body.style.overflow = 'hidden';
-    }
-
-    // 关闭预览
-    function closePreview() {
-        const modal = document.getElementById('imagePreviewModal');
-        modal.classList.remove('active');
-        
-        // 恢复页面滚动
-        document.body.style.overflow = '';
-    }
-
-    // 按ESC键关闭预览
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closePreview();
-        }
-    });
-    </script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -1,285 +1,57 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>博客 | 崔小建 | CATIA二次开发 & BIM开发工程师</title>
-    <style>
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --accent: #58a6ff;
-            --border: #30363d;
-            --radius: 10px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>博客 | 崔小建 | CATIA 二次开发 &amp; BIM 开发工程师</title>
+<meta name="description" content="崔小建的技术博客：分享 CATIA 二次开发、BIM 正向设计、工程数字化的技术实践与思考。">
+<meta name="theme-color" content="#0b0e14">
+<link rel="canonical" href="https://alexcuidev.github.io/blog/">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AlexCuiDev">
+<meta property="og:title" content="博客 | 崔小建">
+<meta property="og:description" content="CATIA 二次开发、BIM 正向设计、工程数字化的技术实践与思考。">
+<meta property="og:url" content="https://alexcuidev.github.io/blog/">
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            padding-top: 70px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(13,17,23,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 999;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-left: 24px;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--accent);
-        }
-
-        /* 移动端导航优化 */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: flex;
-                overflow-x: auto;
-                padding: 0 10px;
-                scrollbar-width: none;
-            }
-            .nav-links::-webkit-scrollbar {
-                display: none;
-            }
-            .nav-links a {
-                margin-left: 12px;
-                font-size: 14px;
-                white-space: nowrap;
-            }
-        }
-
-        .blog-hero {
-            padding: 40px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 60px;
-        }
-
-        .blog-hero h1 {
-            font-size: 36px;
-            margin-bottom: 12px;
-            line-height: 1.2;
-        }
-
-        .blog-hero p {
-            color: var(--text-secondary);
-            font-size: 18px;
-            max-width: 800px;
-        }
-
-        .blog-list {
-            max-width: 1200px;
-            margin: 0 auto 80px;
-        }
-       @media (max-width: 1280px) {
-            .blog-list {
-                max-width: 90%; /* 小屏幕下用90%宽度，避免贴边 */
-            }
-        }
-
-        .blog-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 30px;
-            margin-bottom: 24px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .blog-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);
-        }
-
-        .blog-card:focus-within {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        .blog-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 16px;
-            flex-wrap: wrap; /* 移动端标签换行 */
-        }
-
-        .blog-meta .tag {
-            background: rgba(88, 166, 255, 0.1);
-            color: var(--accent);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .blog-card h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .blog-card h2 a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .blog-card h2 a:hover {
-            color: var(--accent);
-        }
-
-        .blog-excerpt {
-            color: var(--text-secondary);
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .blog-readmore {
-            display: inline-block;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .blog-readmore:hover {
-            text-decoration: underline;
-        }
-
-        footer {
-            padding:40px 0; 
-            border-top:1px solid var(--border); 
-            text-align:center; 
-            color:var(--text-secondary);
-            margin-top: 80px;
-        }
-
-        /* 加载动画样式 */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(88, 166, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* 错误提示样式 */
-        .error-message {
-            color: #f87171;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .retry-btn {
-            background: var(--bg-secondary);
-            color: var(--accent);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 8px 16px;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .retry-btn:hover {
-            border-color: var(--accent);
-            background: rgba(88, 166, 255, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .blog-hero h1 {
-                font-size: 28px;
-            }
-            .blog-card {
-                padding: 20px;
-            }
-            .blog-card h2 {
-                font-size: 20px;
-            }
-            .blog-excerpt {
-                font-size: 15px;
-            }
-        }
-    </style>
-    <!-- 引入Markdown解析库 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- 引入代码高亮库（可选） -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js/styles/github-dark.min.css">
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/blog.css">
 </head>
 <body>
 
-    <header>
-        <div class="container nav">
-            <div class="logo">AlexCuiDev</div>
-            <div class="nav-links">
-                <a href="../index.html#home">首页</a>
-                <a href="../index.html#about">关于我</a>
-                <a href="../index.html#skills">技能</a>
-                <a href="../index.html#experience">经历</a>
-                <a href="../index.html#works">成果展示</a>
-                <a href="index.html" class="active">博客</a>
-                <a href="https://github.com/AlexCuiDev" target="_blank">GitHub</a>
-            </div>
-        </div>
-    </header>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="logo" href="../index.html" aria-label="AlexCuiDev 首页">
+            <span class="logo-mark" aria-hidden="true">AC</span>
+            <span class="logo-text">AlexCuiDev</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="展开导航菜单">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+
+        <nav class="nav-links" id="siteNav" aria-label="主导航">
+            <a href="../index.html#home">首页</a>
+            <a href="../index.html#about">关于我</a>
+            <a href="../index.html#skills">专业技能</a>
+            <a href="../index.html#experience">工作经历</a>
+            <a href="../index.html#works">成果展示</a>
+            <a href="index.html" aria-current="page">博客</a>
+            <a href="https://github.com/AlexCuiDev" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">↗</span></a>
+        </nav>
+    </div>
+</header>
+
+<main id="main">
 
     <section class="blog-hero">
         <div class="container">
+            <p class="kicker">/ blog</p>
             <h1>我的技术博客</h1>
             <p>分享 CATIA 二次开发、BIM 正向设计、工程数字化的技术实践与思考</p>
         </div>
@@ -287,68 +59,106 @@
 
     <section class="container">
         <div class="blog-list" id="postList">
-            <p style="text-align:center; color:var(--text-secondary);">
-                <span class="loading-spinner"></span>正在加载文章...
-            </p>
+            <p class="state"><span class="spinner" aria-hidden="true"></span>正在加载文章…</p>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>崔小建 | CATIA二次开发 & BIM开发工程师 | 中国上海</p>
-            <p style="margin-top:8px">© 2026 AlexCuiDev</p>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <a class="logo" href="../index.html">
+                <span class="logo-mark" aria-hidden="true">AC</span>
+                <span class="logo-text">AlexCuiDev</span>
+            </a>
+            <p>CATIA 二次开发 &amp; BIM 开发工程师，中国上海。从设计到研发，做能落地的工程数字化工具。</p>
         </div>
-    </footer>
+        <div class="footer-col">
+            <h4>导航</h4>
+            <ul>
+                <li><a href="../index.html#home">首页</a></li>
+                <li><a href="../index.html#about">关于我</a></li>
+                <li><a href="../index.html#skills">专业技能</a></li>
+                <li><a href="../index.html#experience">工作经历</a></li>
+                <li><a href="../index.html#works">成果展示</a></li>
+                <li><a href="index.html" aria-current="page">技术博客</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>联系</h4>
+            <ul>
+                <li><a href="mailto:cuixiaojianok@outlook.com">cuixiaojianok@outlook.com</a></li>
+                <li><a href="https://github.com/AlexCuiDev" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="../docs/paper02.pdf" target="_blank" rel="noopener">代表论文 PDF ↗</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>© <span data-year>2026</span> AlexCuiDev</span>
+        <span>CATIA 二次开发 / BIM 正向设计 / 工程数字化</span>
+    </div>
+</footer>
 
-    <script>
-        // 初始化代码高亮
-        hljs.highlightAll();
+<button class="to-top" type="button" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
-        // 从posts.json加载文章列表
-        document.addEventListener('DOMContentLoaded', async function() {
-            const postListEl = document.getElementById('postList');
-            
-            try {
-                // 读取posts.json文件
-                const response = await fetch('posts.json');
-                if (!response.ok) throw new Error('加载文章列表失败');
-                
-                const posts = await response.json();
-                
-                // 生成博客列表HTML
-                if (posts.length === 0) {
-                    postListEl.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">暂无文章</p>';
-                    return;
-                }
+<script src="../assets/js/main.js"></script>
+<script>
+(function () {
+    'use strict';
 
-                let blogListHtml = '';
-                posts.forEach(post => {
-                    blogListHtml += `
-                    <div class="blog-card">
-                        <div class="blog-meta">
-                            <span>${post.date}</span>
-                            <span class="tag">${post.tag}</span>
-                        </div>
-                        <h2><a href="post-viewer.html?file=${post.filename}">${post.title}</a></h2>
-                        <div class="blog-excerpt">${post.desc}</div>
-                        <a href="post-viewer.html?file=${post.filename}" class="blog-readmore">阅读全文 →</a>
-                    </div>
-                    `;
-                });
+    var listEl = document.getElementById('postList');
 
-                postListEl.innerHTML = blogListHtml;
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
-            } catch (error) {
-                // 加载失败显示错误提示
-                postListEl.innerHTML = `
-                <div class="error-message">
-                    <p>❌ 文章列表加载失败: ${error.message}</p>
-                    <button class="retry-btn" onclick="window.location.reload()">重试</button>
-                </div>
-                `;
-                console.error('加载博客列表出错:', error);
-            }
+    function render(posts) {
+        if (!posts.length) {
+            listEl.innerHTML = '<p class="state">暂无文章</p>';
+            return;
+        }
+
+        listEl.innerHTML = posts.map(function (post) {
+            var href = 'post-viewer.html?file=' + encodeURIComponent(post.filename);
+            return '' +
+                '<article class="blog-card reveal">' +
+                    '<div class="blog-meta">' +
+                        '<span>' + escapeHtml(post.date) + '</span>' +
+                        '<span class="tag">' + escapeHtml(post.tag) + '</span>' +
+                    '</div>' +
+                    '<h2><a href="' + href + '">' + escapeHtml(post.title) + '</a></h2>' +
+                    '<p class="blog-excerpt">' + escapeHtml(post.desc) + '</p>' +
+                    '<a class="blog-readmore" href="' + href + '">阅读全文 <span aria-hidden="true">→</span></a>' +
+                '</article>';
+        }).join('');
+
+        // 新插入的卡片也要走入场动效
+        if (window.AlexCuiReveal) window.AlexCuiReveal();
+    }
+
+    fetch('posts.json')
+        .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(render)
+        .catch(function (err) {
+            listEl.innerHTML =
+                '<div class="state state--error">' +
+                    '<p>文章列表加载失败：' + escapeHtml(err.message) + '</p>' +
+                    '<button class="retry-btn" type="button" onclick="window.location.reload()">重试</button>' +
+                '</div>';
+            console.error('加载博客列表出错:', err);
         });
-    </script>
+})();
+</script>
 </body>
 </html>
