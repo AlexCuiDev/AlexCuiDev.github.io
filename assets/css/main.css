@@ -389,10 +389,14 @@ button {
 .hero-grid {
     position: relative;
     padding-bottom: 72px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    gap: 56px;
+    align-items: center;
 }
 
-/* 单栏首屏：文字区限宽，右侧留白给柔光 */
-.hero-copy { max-width: 660px; }
+/* 文字区不再限宽，由栅格列宽控制节奏 */
+.hero-copy { max-width: 640px; }
 
 .hero-copy .kicker { margin-bottom: 22px; }
 
@@ -440,9 +444,113 @@ button {
 }
 .hero-mail:hover { color: var(--accent); }
 
-/* 首屏右侧：技术栈面板 */
-/* 首屏右侧的技术栈面板已移除：
-   工具清单与下方「专业技能」板块重复，首屏只保留人话，右侧留白交给柔光与网格纹理。 */
+/* ---------- 6.1 首屏右侧：能力图谱面板 ---------- */
+.hero-graph {
+    position: relative;
+    padding: 18px 18px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(88, 166, 255, .07), transparent 62%),
+        var(--surface);
+    overflow: hidden;
+}
+
+.graph-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .04em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+}
+
+.graph-hint {
+    color: var(--accent);
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.graph-canvas-wrap {
+    position: relative;
+    height: 300px;
+    margin: 4px 0 2px;
+}
+
+.graph-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: manipulation;
+}
+
+.graph-tip {
+    padding-top: 13px;
+    border-top: 1px solid var(--line);
+    transition: border-color var(--dur) var(--ease);
+}
+
+.graph-tip.is-active { border-top-color: var(--accent-line); }
+
+.graph-tip-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-2);
+    transition: color var(--dur) var(--ease);
+}
+
+.graph-tip.is-active .graph-tip-label { color: var(--accent); }
+
+.graph-tip-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-3);
+    margin-top: 5px;
+    min-height: 44px;
+    transition: color var(--dur) var(--ease);
+}
+
+.graph-tip.is-active .graph-tip-text { color: var(--ink-2); }
+
+.graph-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 13px;
+}
+
+.graph-legend li { display: block; }
+
+.graph-legend button {
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-3);
+    transition: color var(--dur) var(--ease),
+                border-color var(--dur) var(--ease),
+                background var(--dur) var(--ease);
+}
+
+.graph-legend button:hover {
+    color: var(--accent);
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+}
+
+.graph-legend button.is-active {
+    color: var(--accent);
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+}
 
 /* 数据条 */
 .stat-strip {
@@ -471,6 +579,12 @@ button {
     color: var(--accent);
     line-height: 1.1;
     margin-bottom: 4px;
+}
+
+.stat-strip b em {
+    font-style: normal;
+    font-size: 15px;
+    margin-left: 1px;
 }
 
 .stat-strip span {
@@ -674,6 +788,182 @@ button {
 }
 
 .tl-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+/* 经历里挂的案例块：把「做了什么、做成什么样」摊开讲 */
+.tl-case {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent-line);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, .018);
+}
+
+.tl-case-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+}
+
+.tl-case-tag {
+    padding: 1px 9px;
+    border-radius: 20px;
+    border: 1px solid var(--accent-line);
+    background: var(--accent-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: .02em;
+}
+
+.tl-case ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tl-case li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--ink-2);
+}
+
+.tl-case li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-3);
+}
+
+.tl-case li b {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* ---------- 9.1 代表案例（成果展示置顶） ---------- */
+.case-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 56px;
+}
+
+.case-main {
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.case-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.case-title {
+    font-size: 20px;
+    line-height: 1.35;
+    margin-bottom: 8px;
+}
+
+.case-sub {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+}
+
+.case-desc {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-2);
+}
+
+.case-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: 22px 0 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.case-metrics b {
+    display: block;
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.2;
+    margin-bottom: 3px;
+}
+
+.case-metrics b em {
+    font-style: normal;
+    font-size: 13px;
+    margin-left: 1px;
+}
+
+.case-metrics span {
+    font-size: 12px;
+    color: var(--ink-3);
+}
+
+.case-side {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.case-card {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color var(--dur) var(--ease),
+                background var(--dur) var(--ease);
+}
+
+.case-card:hover {
+    border-color: var(--line-strong);
+    background: var(--surface-2);
+}
+
+.case-card-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.case-card p {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--ink-2);
+}
+
+.case-card .link {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+}
 
 /* ---------- 10. 成果展示（横向滚动轨道） ---------- */
 .works-group + .works-group { margin-top: 52px; }
@@ -934,6 +1224,8 @@ button {
     border-top: 1px solid var(--line);
     padding: 56px 0 0;
     background: var(--surface);
+    /* 页脚柔光是 1000px 宽的绝对定位伪元素，不裁剪会把页面横向撑宽 */
+    overflow: hidden;
 }
 
 /* 页脚顶部柔光，收尾时再给一点亮度层次 */
@@ -1049,6 +1341,14 @@ button {
 /* ---------- 15. 响应式 ---------- */
 @media (max-width: 1000px) {
     .hero-desc { max-width: 640px; }
+    /* 首屏回落单栏：图谱面板移到文字下方 */
+    .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 44px;
+        align-items: start;
+    }
+    .hero-copy { max-width: 640px; }
+    .case-block { grid-template-columns: minmax(0, 1fr); }
     .about-grid { grid-template-columns: minmax(0, 1fr); }
     .stat-strip { grid-template-columns: repeat(3, 1fr); }
     .stat-strip li:nth-child(3) { border-right: 0; }
@@ -1098,9 +1398,17 @@ button {
     .container { padding: 0 18px; }
     .section { padding: 64px 0; }
     .hero { padding-top: calc(var(--header-h) + 48px); }
-    .hero-grid { padding-bottom: 48px; }
+    .hero-grid { padding-bottom: 48px; gap: 36px; }
+    .hero-copy { max-width: 100%; }
+    .hero-graph { padding: 16px 14px 14px; }
+    .graph-canvas-wrap { height: 248px; }
+    .graph-head { font-size: 11px; }
     .info-grid { grid-template-columns: minmax(0, 1fr); }
     .skill-grid { grid-template-columns: minmax(0, 1fr); }
+    .case-main { padding: 22px; }
+    .case-title { font-size: 18px; }
+    .case-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+    .tl-case { padding: 14px 15px; }
     .stat-strip { grid-template-columns: repeat(2, 1fr); }
     .stat-strip li { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .stat-strip li:nth-child(2n) { border-right: 0; }

@@ -94,6 +94,43 @@
         }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
 
         els.forEach(function (el) { io.observe(el); });
+
+        /* 兜底：观察器首帧偶尔会漏掉已在视口内的元素（实测冷加载时出现过），
+           那样整段内容会永远停在 opacity:0。这里再扫一遍，
+           并在滚动 / 缩放时持续补扫，确保漏掉的元素最终也会出现。 */
+        var pending = els.slice();
+
+        function sweep() {
+            if (!pending.length) return;
+            var vh = window.innerHeight;
+            pending = pending.filter(function (el) {
+                if (!el.isConnected) return false;
+                var r = el.getBoundingClientRect();
+                if (r.top < vh * 0.94 && r.bottom > 0) {
+                    el.classList.add('is-visible');
+                    return false;
+                }
+                return true;
+            });
+            if (!pending.length) {
+                window.removeEventListener('scroll', onScroll);
+                window.removeEventListener('resize', onScroll);
+            }
+        }
+
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(function () {
+                ticking = false;
+                sweep();
+            });
+        }
+
+        sweep();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
     }
 
     initReveal();
@@ -265,14 +302,21 @@
     });
 
     /* ---------- 8. 带锚点直接打开页面时精确落位 ---------- */
-    /* 浏览器在 load 时对 fragment 的处理受 smooth 滚动与懒加载影响，
-       实测会落到上一节。这里自己算偏移，落地后再校正。 */
+    /* 浏览器在 load 之后才执行原生 fragment 滚动，而 html 设了 scroll-behavior: smooth，
+       实测会「飞」1.5 秒过去，中途还闪一下上一节。这里在 load 之前就把平滑滚动关掉，
+       自己算偏移瞬时定位，再用几次定时器校正懒加载引起的高度变化。 */
     (function hashLanding() {
         var hash = window.location.hash;
         if (!hash || hash.length < 2) return;
 
         var target = document.getElementById(hash.slice(1));
         if (!target) return;
+
+        var root = document.documentElement;
+
+        /* 关键：本脚本在 body 末尾执行，此时浏览器还没做原生 fragment 滚动，
+           现在关掉平滑滚动才来得及。 */
+        root.style.scrollBehavior = 'auto';
 
         var touched = false;
         /* 只认用户真实操作，浏览器自己触发的 scroll 事件不算 */
@@ -285,7 +329,11 @@
             var header = $('.site-header');
             var offset = (header ? header.offsetHeight : 64) + 16;
             var y = target.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+            window.scrollTo({ top: Math.max(0, y), behavior: 'instant' });
+        }
+
+        function restore() {
+            root.style.scrollBehavior = '';
         }
 
         window.addEventListener('load', function () {
@@ -293,6 +341,8 @@
             setTimeout(jump, 250);
             setTimeout(jump, 900);
             setTimeout(jump, 2000);
+            /* 校正完成后再把平滑滚动还给用户后续的锚点点击 */
+            setTimeout(restore, 2200);
         });
     })();
 })();
