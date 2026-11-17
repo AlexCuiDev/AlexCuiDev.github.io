@@ -15,8 +15,8 @@
 <meta property="og:url" content="https://alexcuidev.github.io/blog/">
 
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/main.css?v=20261119">
-<link rel="stylesheet" href="../assets/css/blog.css?v=20261119">
+<link rel="stylesheet" href="../assets/css/main.css?v=20261117">
+<link rel="stylesheet" href="../assets/css/blog.css?v=20261117">
 </head>
 <body>
 
@@ -104,7 +104,8 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
-<script src="../assets/js/main.js?v=20261119"></script>
+<script src="../assets/js/main.js?v=20261117"></script>
+<script src="posts-data.js?v=20261117"></script>
 <script>
 (function () {
     'use strict';
@@ -144,20 +145,22 @@
         if (window.AlexCuiReveal) window.AlexCuiReveal();
     }
 
-    fetch('posts.json')
-        .then(function (res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.json();
-        })
-        .then(render)
-        .catch(function (err) {
-            listEl.innerHTML =
-                '<div class="state state--error">' +
-                    '<p>文章列表加载失败：' + escapeHtml(err.message) + '</p>' +
-                    '<button class="retry-btn" type="button" onclick="window.location.reload()">重试</button>' +
-                '</div>';
-            console.error('加载博客列表出错:', err);
-        });
+    /* 文章数据用 <script> 引入，不是 fetch。
+       原因：浏览器在 file:// 协议下会拦掉 fetch 本地文件（CORS），
+       直接双击打开 HTML 时列表会报「Failed to fetch」。
+       改成 <script> 后，file:// / http:// / GitHub Pages 三种方式都能正常显示。 */
+    var posts = window.AlexCuiPosts;
+    if (!Array.isArray(posts)) {
+        listEl.innerHTML =
+            '<div class="state state--error">' +
+                '<p>文章数据未加载</p>' +
+                '<p>posts-data.js 不存在。在仓库根目录执行 <code>python tools/build-posts.py</code> 后刷新本页。</p>' +
+                '<button class="retry-btn" type="button" onclick="window.location.reload()">重试</button>' +
+            '</div>';
+        return;
+    }
+
+    render(posts);
 })();
 </script>
 </body>

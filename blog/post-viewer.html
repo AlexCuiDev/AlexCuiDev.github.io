@@ -9,10 +9,11 @@
 <meta name="robots" content="noindex">
 
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/main.css?v=20261119">
-<link rel="stylesheet" href="../assets/css/blog.css?v=20261119">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<link rel="stylesheet" href="../assets/css/main.css?v=20261117">
+<link rel="stylesheet" href="../assets/css/blog.css?v=20261117">
+<!-- Markdown 解析与代码高亮：本地化，不再依赖 jsdelivr，离线 / 国内 / Pages 都能跑 -->
+<script src="vendor/marked.min.js?v=20261117"></script>
+<script src="vendor/highlight.min.js?v=20261117"></script>
 </head>
 <body>
 
@@ -106,7 +107,8 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
-<script src="../assets/js/main.js?v=20261119"></script>
+<script src="../assets/js/main.js?v=20261117"></script>
+<script src="posts-data.js?v=20261117"></script>
 <script>
 (function () {
     'use strict';
@@ -117,6 +119,15 @@
     var tagEl     = document.getElementById('postTag');
     var params    = new URLSearchParams(window.location.search);
     var filename  = params.get('file');
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
     /* ---------- 极简清洗：去掉 script 与 on* 事件属性 ---------- */
     function sanitize(html) {
@@ -145,41 +156,36 @@
         titleEl.textContent = '没有找到文章';
         fail('没有找到文章：缺少 file 参数');
     } else {
-        /* 先取元信息，把标题、日期、标签填上 */
-        fetch('posts.json')
-            .then(function (r) { return r.ok ? r.json() : []; })
-            .then(function (posts) {
-                var hit = posts.filter(function (p) { return p.filename === filename; })[0];
-                if (!hit) return;
-                titleEl.textContent = hit.title;
-                dateEl.textContent = hit.date;
-                if (hit.tag) { tagEl.textContent = hit.tag; tagEl.hidden = false; }
-                document.title = hit.title + ' | AlexCuiDev';
-            })
-            .catch(function () { /* 元信息失败不阻塞正文 */ });
+        /* 文章数据用 <script> 引入（不是 fetch）。
+           原因：file:// 协议下浏览器会拦掉 fetch 本地文件（CORS），
+           直接双击打开 HTML 时正文取不到。 */
+        var posts = Array.isArray(window.AlexCuiPosts) ? window.AlexCuiPosts : [];
+        var hit = posts.filter(function (p) { return p.filename === filename; })[0];
 
-        fetch('posts/' + filename)
-            .then(function (res) {
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                return res.text();
-            })
-            .then(function (md) {
-                /* 把 /blog/assets/xxx 改成相对路径 assets/xxx */
-                md = md.replace(/!\[([^\]]*)\]\(\/blog\/assets\/([^)]+)\)/g, '![$1](assets/$2)');
+        if (!hit) {
+            titleEl.textContent = '没有找到文章';
+            fail(posts.length
+                ? '没有找到文章：' + filename
+                : '文章数据未加载：posts-data.js 不存在。在仓库根目录执行 python tools/build-posts.py 后刷新本页。');
+            return;
+        }
 
-                var html = window.marked ? window.marked.parse(md) : '<pre>' + md + '</pre>';
-                contentEl.innerHTML = sanitize(html);
+        titleEl.textContent = hit.title;
+        dateEl.textContent = hit.date;
+        if (hit.tag) { tagEl.textContent = hit.tag; tagEl.hidden = false; }
+        document.title = hit.title + ' | AlexCuiDev';
 
-                /* 关键修复：内容渲染完成后再高亮，之前是在 DOM 就绪前调用，等于空转 */
-                if (window.hljs) {
-                    window.hljs.highlightAll();
-                }
-                window.AlexCuiReveal && window.AlexCuiReveal();
-            })
-            .catch(function (err) {
-                fail('加载失败：' + err.message);
-                console.error('加载文章出错:', err);
-            });
+        /* 把 /blog/assets/xxx 改成相对路径 assets/xxx */
+        var md = String(hit.content || '').replace(/!\[([^\]]*)\]\(\/blog\/assets\/([^)]+)\)/g, '![$1](assets/$2)');
+
+        var html = window.marked ? window.marked.parse(md) : '<pre>' + escapeHtml(md) + '</pre>';
+        contentEl.innerHTML = sanitize(html);
+
+        /* 内容渲染完成后再高亮，之前是在 DOM 就绪前调用，等于空转 */
+        if (window.hljs) {
+            window.hljs.highlightAll();
+        }
+        window.AlexCuiReveal && window.AlexCuiReveal();
     }
 
     /* ---------- 阅读进度条 ---------- */
