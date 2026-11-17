@@ -144,8 +144,10 @@
             var track = $('.rail-track', rail);
             if (!track) return;
 
-            var prev = $('.rail-btn--prev', rail);
-            var next = $('.rail-btn--next', rail);
+            /* 箭头按钮在 .works-head 里，不在 .rail 内 —— 从最近的轨道容器往上找 */
+            var host = rail.closest('.works-track') || rail.closest('.works-block');
+            var prev = host ? $('.rail-btn--prev', host) : null;
+            var next = host ? $('.rail-btn--next', host) : null;
 
             function step() {
                 var card = $('.work-card', track);

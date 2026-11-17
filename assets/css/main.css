@@ -965,24 +965,33 @@ button {
     font-size: 12px;
 }
 
-/* ---------- 10. 成果展示（横向滚动轨道） ---------- */
-.works-group + .works-group { margin-top: 52px; }
+/* ---------- 10. 成果展示（按能力分组 + 横向滚动轨道） ---------- */
 
-.works-head {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 18px;
+/* 定位段：先说清成果来自哪里 */
+.works-lead {
+    max-width: 78ch;
+    margin: -2px 0 34px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--ink-2);
 }
+.works-lead b { color: var(--ink); font-weight: 600; }
 
-.works-head h3 {
+/* 能力分组 */
+.works-block { margin-top: 52px; }
+
+/* 组头：标题 + 这组证明了什么能力 */
+.works-head--block { margin-bottom: 20px; }
+
+.works-head--block h3 {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 17px;
+    margin-bottom: 8px;
 }
 
-.works-head h3 svg {
+.works-head--block h3 svg {
     width: 18px;
     height: 18px;
     stroke: var(--accent);
@@ -990,6 +999,32 @@ button {
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.works-note {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-3);
+    max-width: 72ch;
+}
+
+/* 轨道头：类型标签 + 计数 + 翻页箭头 */
+.works-track + .works-track { margin-top: 26px; }
+
+.works-head--track {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.rail-block-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .08em;
+    color: var(--ink-3);
+    white-space: nowrap;
 }
 
 .works-count {
@@ -1416,6 +1451,9 @@ button {
     .footer-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
     .work-card { flex: 0 0 246px; width: 246px; }
     .work-media { height: 130px; }
+    .works-lead { font-size: 13.5px; margin-bottom: 28px; }
+    .works-note { font-size: 12.5px; }
+    .works-head--track { gap: 10px 12px; }
 }
 
 /* ---------- 16. 降低动效偏好 ---------- */
