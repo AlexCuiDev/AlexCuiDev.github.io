@@ -1035,6 +1035,58 @@ button {
 
 .works-nav { margin-left: auto; display: flex; gap: 6px; }
 
+/* 资质索引：主页只留摘要，完整成果与证书在 works.html */
+.works-index {
+    display: flex;
+    align-items: center;
+    gap: 20px 24px;
+    flex-wrap: wrap;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+.works-index-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .08em;
+    color: var(--ink-3);
+    white-space: nowrap;
+}
+.works-index-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 26px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.works-index-list li { display: flex; align-items: baseline; gap: 6px; }
+.works-index-list b { font-family: var(--mono); font-size: 19px; color: var(--accent); }
+.works-index-list span { font-size: 13px; color: var(--ink-2); }
+.works-index-desc {
+    flex: 1 1 340px;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-3);
+}
+.works-index-cta { margin-left: auto; white-space: nowrap; }
+
+/* 二级页：返回首页 */
+.works-back { margin-bottom: 16px; }
+.works-back-link {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+}
+.works-back-link:hover { color: var(--accent); }
+
+/* 二级页首节避开固定头部 */
+.page-works .section:first-of-type { padding-top: calc(var(--header-h) + 56px); }
+
 .rail-btn {
     width: 32px;
     height: 32px;
@@ -1454,6 +1506,8 @@ button {
     .works-lead { font-size: 13.5px; margin-bottom: 28px; }
     .works-note { font-size: 12.5px; }
     .works-head--track { gap: 10px 12px; }
+    .works-index { padding: 18px 16px; gap: 14px 16px; }
+    .works-index-list { gap: 8px 18px; }
 }
 
 /* ---------- 16. 降低动效偏好 ---------- */
