@@ -18,6 +18,9 @@
     var tipLabel = tip ? tip.querySelector('.graph-tip-label') : null;
     var tipText  = tip ? tip.querySelector('.graph-tip-text')  : null;
 
+    /* 节点短标签统一字体栈 */
+    var FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+
     /* ---------- 1. 数据 ---------- */
     var NODES = [
         { id: 'presale',  short: '售前', name: '售前与需求洞察', r: 19,
@@ -26,7 +29,7 @@
           desc: '面向装备制造、汽车 / 新能源、AEC 桥梁等领域输出解决方案、技术建议书与方案 PPT，同时把共性需求反馈回产品研发。' },
         { id: 'dev',      short: '开发', name: '二次开发',       r: 18,
           desc: '基于达索 3DEXPERIENCE / CATIA 做二次开发与规则引擎，把业务规则编码为平台原生命令，让专业能力沉淀在平台里，而不是留在个人电脑。' },
-        { id: 'bim',      short: '参数化', name: '参数化正向设计', r: 16,
+        { id: 'bim',      short: '建模', name: '参数化正向设计', r: 18,
           desc: '把参数化建模贯穿到成果输出的正向设计系统族谱（TJAD-SCCB 系列），覆盖「方案设计 → 结构计算 → 成果输出」全链路——发端于桥梁设计院的方法论，已迁移到装备制造的定制化场景。' },
         { id: 'data',     short: '互通', name: '数据互通',       r: 15,
           desc: '打通设计数据、装配图与设计 BOM，配合 3DDashboard 数字大屏与移动端三维交付，让平台价值从一线到决策层都能直接看见。' },
@@ -72,6 +75,17 @@
     function motionOK() { return !(reduceMotion && reduceMotion.matches); }
 
     /* ---------- 4. 初始化布局 ---------- */
+    /* 短标签字号：先按节点半径定，再按文字实际宽度收一档，
+       保证标签完整落在圆内（3 个全角中文字直接用半径算的字号会撑破节点） */
+    function fitFont(short, r) {
+        var fs = Math.max(9, Math.min(12, r * 0.66));
+        ctx.font = '600 ' + fs + 'px ' + FONT;
+        var maxW = r * 1.62;
+        var tw = ctx.measureText(short).width;
+        if (tw > maxW) fs = Math.max(7, fs * maxW / tw);
+        return fs;
+    }
+
     function build() {
         var i, n = NODES.length;
         nodes = NODES.map(function (d, idx) {
@@ -79,6 +93,7 @@
             var ang = (idx / n) * Math.PI * 2 - Math.PI / 2;
             return {
                 id: d.id, short: d.short, name: d.name, desc: d.desc, r: d.r,
+                fs: fitFont(d.short, d.r),
                 x: 0, y: 0, vx: 0, vy: 0, fx: 0, fy: 0
             };
         });
@@ -270,10 +285,8 @@
             ctx.strokeStyle = stroke;
             ctx.stroke();
 
-            /* 节点内短标签 */
-            var fs = Math.max(9, Math.min(12, nd.r * 0.66));
-            ctx.font = '600 ' + fs + 'px ' +
-                '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+            /* 节点内短标签（字号已在 build() 里按节点宽度适配好，这里直接用） */
+            ctx.font = '600 ' + nd.fs + 'px ' + FONT;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = ink;
