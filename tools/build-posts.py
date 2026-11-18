@@ -30,6 +30,8 @@
 
 import json
 import re
+import shutil
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -46,6 +48,12 @@ POSTS_DIR = BLOG / "posts"
 POSTS_JSON = BLOG / "posts.json"
 POSTS_JS = BLOG / "posts-data.js"
 HTML_FILES = (BLOG / "index.html", BLOG / "post-viewer.html")
+SITEMAP = ROOT / "sitemap.xml"
+MD2HTML = ROOT / "tools" / "md2html.ts"
+STATIC_INPUT = BLOG / ".static-input.json"
+SITEMAP_MARK = re.compile(
+    r"(<!-- posts:start -->).*?(<!-- posts:end -->)", re.S
+)
 
 FRONT_MATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
 DATE_DIV_RE = re.compile(r"\A\s*<div[^>]*class=[\"']?date[\"']?[^>]*>[^<]*</div>\s*\Z", re.I)
@@ -149,6 +157,84 @@ def clean_body(body, title):
     return "\n".join(lines).rstrip() + "\n"
 
 
+def slugify(text):
+    """把文件名/标题转成 URL 友好的 slug（只保留 ASCII 字母数字）。"""
+    return re.sub(r"[^0-9A-Za-z]+", "-", str(text)).strip("-").lower()
+
+
+def make_slug(meta, filename, date):
+    """文章 URL 的 slug。
+
+    优先用 front matter 里手写的 slug（最可控）；没写就从文件名生成并拼日期，
+    避免中文文件名 slugify 之后变成空串。
+    """
+    explicit = (meta.get("slug") or "").strip()
+    if explicit:
+        return explicit
+    base = slugify(Path(filename).stem)
+    if len(base) < 3:
+        base = "post"
+    return "{}-{}".format(base, (date or "nodate").replace("-", ""))
+
+
+def build_static(posts):
+    """调 Deno 把 Markdown 渲染成静态文章页。
+
+    为什么必须有静态页：阅读页靠 JS 注入正文，爬虫抓到的只有空壳，
+    文章写得再好，搜索引擎与 AI 检索也读不到。静态页把正文写进 HTML，禁用 JS 也能读。
+
+    没装 Deno 就跳过：站点照常能看，只是文章暂时还不能被索引。
+    """
+    deno = shutil.which("deno")
+    if not deno:
+        print("[跳过] 未找到 deno，静态文章页未生成（文章暂时还不能被搜索引擎索引）")
+        return False
+
+    STATIC_INPUT.write_text(json.dumps(posts, ensure_ascii=False), encoding="utf-8")
+    try:
+        proc = subprocess.run(
+            [deno, "run", "--allow-read", "--allow-write",
+             str(MD2HTML), str(STATIC_INPUT), str(BLOG)],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+        )
+    finally:
+        try:
+            STATIC_INPUT.unlink()
+        except OSError:
+            pass
+
+    for line in ((proc.stdout or "") + (proc.stderr or "")).strip().splitlines():
+        print(line)
+    return proc.returncode == 0
+
+
+def update_sitemap(posts):
+    """把博客文章写进 sitemap.xml 的 posts:start / posts:end 标记区间。"""
+    if not SITEMAP.exists():
+        print("[警告] 找不到 sitemap.xml，跳过")
+        return
+    xml = read_text(SITEMAP)
+    if not SITEMAP_MARK.search(xml):
+        print("[警告] sitemap.xml 里没有 posts:start / posts:end 标记，跳过")
+        return
+
+    items = []
+    for p in posts:
+        items.append(
+            "\n  <url>\n"
+            "    <loc>https://alexcuidev.github.io/blog/{slug}.html</loc>\n"
+            "    <lastmod>{date}</lastmod>\n"
+            "    <changefreq>monthly</changefreq>\n"
+            "    <priority>0.7</priority>\n"
+            "  </url>\n".format(slug=p["slug"], date=p["date"])
+        )
+    block = "  <!-- posts:start -->\n" + "".join(items) + "  <!-- posts:end -->"
+    new_xml = SITEMAP_MARK.sub(lambda m: block, xml)
+    if new_xml != xml:
+        write_text(SITEMAP, new_xml, detect_newline(xml))
+        print("[同步] sitemap.xml 已写入 {} 篇文章".format(len(posts)))
+
+
 def build():
     if not POSTS_DIR.exists():
         print("[错误] 找不到目录：{}".format(POSTS_DIR))
@@ -157,6 +243,7 @@ def build():
     legacy = legacy_index()
     posts = []
     errors = []
+    used_slugs = set()
 
     for md_path in sorted(POSTS_DIR.glob("*.md")):
         meta, migrated = ensure_front_matter(md_path, legacy)
@@ -170,8 +257,19 @@ def build():
             continue
 
         meta, body = parse_front_matter(read_text(md_path))
+        slug = make_slug(meta, md_path.name, meta.get("date", ""))
+        base_slug, n = slug, 2
+        while slug in used_slugs:
+            slug = "{}-{}".format(base_slug, n)
+            n += 1
+        used_slugs.add(slug)
+        if not (meta.get("slug") or "").strip():
+            print("[提示] {} 没写 slug，自动生成 {}（建议在 front matter 里显式指定）".format(
+                md_path.name, slug))
         posts.append({
             "filename": md_path.name,
+            "slug": slug,
+            "url": "{}.html".format(slug),
             "title": meta.get("title", ""),
             "date": meta.get("date", ""),
             "tag": meta.get("tag", ""),
@@ -190,7 +288,7 @@ def build():
     posts.sort(key=lambda p: (p["date"], p["title"]), reverse=True)
 
     # posts.json：只留元信息，保持旧格式
-    legacy_out = [{k: p[k] for k in ("filename", "title", "date", "tag", "desc")} for p in posts]
+    legacy_out = [{k: p[k] for k in ("filename", "slug", "url", "title", "date", "tag", "desc")} for p in posts]
     write_text(POSTS_JSON, json.dumps(legacy_out, ensure_ascii=False, indent=2) + "\n", "\r\n")
 
     # posts-data.js：页面真正加载的文件
@@ -220,6 +318,10 @@ def build():
             if n:
                 write_text(html_path, new_html, detect_newline(html))
                 print("[同步] {} 的 posts-data.js 版本号 → {}".format(html_path.name, today))
+
+    # 静态文章页（爬虫能直接读到正文）+ sitemap 同步
+    build_static(posts)
+    update_sitemap(posts)
 
     print("[完成] {} 篇文章 → {} / {}".format(len(posts), POSTS_JSON.name, POSTS_JS.name))
     return 0

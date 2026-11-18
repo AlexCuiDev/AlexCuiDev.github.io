@@ -13,10 +13,55 @@
 <meta property="og:title" content="博客 | 崔小建">
 <meta property="og:description" content="工业软件二次开发、参数化正向设计、工程数字化的技术实践与思考。">
 <meta property="og:url" content="https://alexcuidev.github.io/blog/">
+<meta property="og:image" content="https://alexcuidev.github.io/images/project02.webp">
+<meta property="og:image:alt" content="崔小建 · 工业软件技术门户">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/main.css?v=20261118">
 <link rel="stylesheet" href="../assets/css/blog.css?v=20261117">
+
+<!-- 结构化数据：把博客声明成一个 Blog，让搜索引擎与 AI 检索知道作者是谁、文章在哪 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Blog",
+      "@id": "https://alexcuidev.github.io/blog/#blog",
+      "url": "https://alexcuidev.github.io/blog/",
+      "name": "崔小建的技术博客",
+      "alternateName": "AlexCuiDev 技术博客",
+      "description": "工业软件二次开发、参数化正向设计、工程数字化的技术实践与思考。",
+      "inLanguage": "zh-CN",
+      "publisher": { "@id": "https://alexcuidev.github.io/#person" },
+      "author": { "@id": "https://alexcuidev.github.io/#person" },
+      "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "headline": "CAA开发-搭建帮助文档环境",
+          "url": "https://alexcuidev.github.io/blog/caa-help-doc.html",
+          "datePublished": "2026-05-21",
+          "description": "分享3DEXPERIENCE二次开发的第一个实践记录",
+          "keywords": "3DEXPERIENCE开发-CAA",
+          "author": { "@id": "https://alexcuidev.github.io/#person" },
+          "publisher": { "@id": "https://alexcuidev.github.io/#person" }
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://alexcuidev.github.io/blog/#webpage",
+      "url": "https://alexcuidev.github.io/blog/",
+      "name": "博客 | 崔小建 | 高级解决方案经理（工业软件 · 3D CAD · PLM · 研发协同）",
+      "description": "工业软件二次开发、参数化正向设计、工程数字化的技术实践与思考。",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://alexcuidev.github.io/#website" },
+      "about": { "@id": "https://alexcuidev.github.io/#person" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -104,7 +149,7 @@
 </button>
 
 <script src="../assets/js/main.js?v=20261117"></script>
-<script src="posts-data.js?v=20261117"></script>
+<script src="posts-data.js?v=20261118"></script>
 <script>
 (function () {
     'use strict';
@@ -127,7 +172,7 @@
         }
 
         listEl.innerHTML = posts.map(function (post) {
-            var href = 'post-viewer.html?file=' + encodeURIComponent(post.filename);
+            var href = post.url || ('post-viewer.html?file=' + encodeURIComponent(post.filename));
             return '' +
                 '<article class="blog-card reveal">' +
                     '<div class="blog-meta">' +

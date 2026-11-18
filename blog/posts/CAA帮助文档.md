@@ -3,6 +3,7 @@ title: CAA开发-搭建帮助文档环境
 date: 2026-05-21
 tag: 3DEXPERIENCE开发-CAA
 desc: 分享3DEXPERIENCE二次开发的第一个实践记录
+slug: caa-help-doc
 ---
 # CAA开发-搭建帮助文档环境
 <div class="date">2026-05-21</div>

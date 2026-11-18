@@ -107,7 +107,7 @@
 </button>
 
 <script src="../assets/js/main.js?v=20261117"></script>
-<script src="posts-data.js?v=20261117"></script>
+<script src="posts-data.js?v=20261118"></script>
 <script>
 (function () {
     'use strict';
@@ -173,6 +173,22 @@
         dateEl.textContent = hit.date;
         if (hit.tag) { tagEl.textContent = hit.tag; tagEl.hidden = false; }
         document.title = hit.title + ' | AlexCuiDev';
+
+        /* 这页是客户端阅读器（noindex），正式可索引的地址是同名静态页。
+           动态补 canonical / og，指向静态页，避免两个地址指向同一篇内容。 */
+        if (hit.url) {
+            var canonicalUrl = 'https://alexcuidev.github.io/blog/' + hit.url;
+            var linkEl = document.createElement('link');
+            linkEl.rel = 'canonical';
+            linkEl.href = canonicalUrl;
+            document.head.appendChild(linkEl);
+            ['og:url', 'og:title'].forEach(function (prop) {
+                var metaEl = document.createElement('meta');
+                metaEl.setAttribute('property', prop);
+                metaEl.setAttribute('content', prop === 'og:url' ? canonicalUrl : hit.title);
+                document.head.appendChild(metaEl);
+            });
+        }
 
         /* 把 /blog/assets/xxx 改成相对路径 assets/xxx */
         var md = String(hit.content || '').replace(/!\[([^\]]*)\]\(\/blog\/assets\/([^)]+)\)/g, '![$1](assets/$2)');

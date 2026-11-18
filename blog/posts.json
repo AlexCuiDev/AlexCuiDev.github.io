@@ -1,6 +1,8 @@
 [
   {
     "filename": "CAA帮助文档.md",
+    "slug": "caa-help-doc",
+    "url": "caa-help-doc.html",
     "title": "CAA开发-搭建帮助文档环境",
     "date": "2026-05-21",
     "tag": "3DEXPERIENCE开发-CAA",

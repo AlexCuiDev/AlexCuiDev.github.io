@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://alexcuidev.github.io/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://alexcuidev.github.io/works.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://alexcuidev.github.io/blog/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 博客文章：由 tools/build-posts.py 自动维护，不要手改 -->
+    <!-- posts:start -->
+
+  <url>
+    <loc>https://alexcuidev.github.io/blog/caa-help-doc.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- posts:end -->
+
+  <!-- 可下载的成果文档：论文原文、参编专著、参编团体标准全文 -->
+  <url>
+    <loc>https://alexcuidev.github.io/docs/paper01.pdf</loc>
+    <lastmod>2026-11-17</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://alexcuidev.github.io/docs/paper02.pdf</loc>
+    <lastmod>2026-11-17</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://alexcuidev.github.io/docs/paper03.pdf</loc>
+    <lastmod>2026-11-17</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://alexcuidev.github.io/docs/paper04.pdf</loc>
+    <lastmod>2026-11-17</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://alexcuidev.github.io/docs/standard01.pdf</loc>
+    <lastmod>2026-11-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
