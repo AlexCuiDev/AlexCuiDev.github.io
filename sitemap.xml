@@ -26,6 +26,13 @@
   <!-- posts:start -->
 
   <url>
+    <loc>https://alexcuidev.github.io/blog/eto-3s-generation.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://alexcuidev.github.io/blog/caa-help-doc.html</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>

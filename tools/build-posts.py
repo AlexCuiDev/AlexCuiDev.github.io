@@ -50,6 +50,9 @@ POSTS_DIR = BLOG / "posts"
 POSTS_JSON = BLOG / "posts.json"
 POSTS_JS = BLOG / "posts-data.js"
 HTML_FILES = (BLOG / "index.html", BLOG / "post-viewer.html")
+BLOG_INDEX = BLOG / "index.html"
+# blog/index.html 的 JSON-LD 里的 blogPost 数组（手写一定会漏，必须自动同步）
+BLOG_LD_RE = re.compile(r'"blogPost"\s*:\s*\[.*?\]', re.S)
 SITEMAP = ROOT / "sitemap.xml"
 MD2HTML = ROOT / "tools" / "md2html.ts"
 STATIC_INPUT = BLOG / ".static-input.json"
@@ -238,6 +241,44 @@ def update_sitemap(posts):
         print("[同步] sitemap.xml 已写入 {} 篇文章".format(len(posts)))
 
 
+def update_blog_ld(posts):
+    """把全部文章同步进 blog/index.html 的 JSON-LD blogPost 数组。
+
+    为什么必须自动同步：blogPost 少一条文章，AI 检索就少一个文章入口。
+    手写这份 JSON-LD 一定会漏 —— 加一篇就得记得回去补一次。
+    """
+    if not BLOG_INDEX.exists():
+        return
+    html = read_text(BLOG_INDEX)
+    if not BLOG_LD_RE.search(html):
+        print("[警告] blog/index.html 里找不到 blogPost 数组，跳过 JSON-LD 同步")
+        return
+
+    items = []
+    for p in posts:
+        # desc 会进正则匹配范围，方括号会让匹配提前截断
+        desc = re.sub(r"[\[\]]", " ", p.get("desc") or "").strip()
+        items.append({
+            "@type": "BlogPosting",
+            "headline": p["title"],
+            "url": "https://alexcuidev.github.io/blog/{}.html".format(p["slug"]),
+            "datePublished": p["date"],
+            "dateModified": p["date"],
+            "description": desc,
+            "keywords": p.get("tag", ""),
+            "author": {"@id": "https://alexcuidev.github.io/#person"},
+            "publisher": {"@id": "https://alexcuidev.github.io/#person"},
+        })
+
+    arr = json.dumps(items, ensure_ascii=False, indent=2).splitlines()
+    # 对齐原文件的缩进层级：数组头跟 "blogPost" 同列，对象再缩进两级
+    arr = "\n".join(["      " + arr[0]] + ["      " + ln for ln in arr[1:]])
+    new_html = BLOG_LD_RE.sub(lambda m: '"blogPost": ' + arr, html, count=1)
+    if new_html != html:
+        write_text(BLOG_INDEX, new_html, detect_newline(html))
+        print("[同步] blog/index.html 的 JSON-LD blogPost → {} 篇".format(len(posts)))
+
+
 def collect_sitemap_urls():
     """从 sitemap.xml 解析出所有 <loc>，供 IndexNow 推送使用。"""
     if not SITEMAP.exists():
@@ -367,9 +408,10 @@ def build():
                 write_text(html_path, new_html, detect_newline(html))
                 print("[同步] {} 的 posts-data.js 版本号 → {}".format(html_path.name, today))
 
-    # 静态文章页（爬虫能直接读到正文）+ sitemap 同步
+    # 静态文章页（爬虫能直接读到正文）+ sitemap 同步 + JSON-LD 同步
     build_static(posts)
     update_sitemap(posts)
+    update_blog_ld(posts)
 
     # 主动通知 IndexNow 参与者（Bing / Yandex 等）来抓取
     notify_indexnow(collect_sitemap_urls())
