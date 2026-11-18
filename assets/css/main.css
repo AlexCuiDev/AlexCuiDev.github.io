@@ -1356,7 +1356,7 @@ button {
 
 .footer-col a {
     color: var(--ink-2);
-    font-size: 14px;
+    font-size: 13px;
     transition: color var(--dur) var(--ease);
 }
 .footer-col a:hover { color: var(--accent); }
