@@ -23,7 +23,7 @@
   </url>
 
   <!-- 博客文章：由 tools/build-posts.py 自动维护，不要手改 -->
-    <!-- posts:start -->
+  <!-- posts:start -->
 
   <url>
     <loc>https://alexcuidev.github.io/blog/caa-help-doc.html</loc>

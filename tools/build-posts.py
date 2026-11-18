@@ -33,6 +33,8 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -51,8 +53,9 @@ HTML_FILES = (BLOG / "index.html", BLOG / "post-viewer.html")
 SITEMAP = ROOT / "sitemap.xml"
 MD2HTML = ROOT / "tools" / "md2html.ts"
 STATIC_INPUT = BLOG / ".static-input.json"
+INDEXNOW_CFG = ROOT / "tools" / "indexnow.json"
 SITEMAP_MARK = re.compile(
-    r"(<!-- posts:start -->).*?(<!-- posts:end -->)", re.S
+    r"[ \t]*(<!-- posts:start -->).*?(<!-- posts:end -->)", re.S
 )
 
 FRONT_MATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
@@ -235,6 +238,51 @@ def update_sitemap(posts):
         print("[同步] sitemap.xml 已写入 {} 篇文章".format(len(posts)))
 
 
+def collect_sitemap_urls():
+    """从 sitemap.xml 解析出所有 <loc>，供 IndexNow 推送使用。"""
+    if not SITEMAP.exists():
+        return []
+    return re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", read_text(SITEMAP))
+
+
+def notify_indexnow(urls):
+    """主动通知 IndexNow 参与者（Bing / Yandex / Naver 等）来抓取。
+
+    为什么需要：搜索引擎自然巡检要几天到两周才轮到你一次。IndexNow 是开放协议，
+    站点根目录放一个 key 文件，发布时 POST 一次，对方几分钟内就能来抓。
+
+    推送失败绝不影响构建结果 —— 它只是加速手段，不是必需品，打印警告即可。
+    """
+    if not INDEXNOW_CFG.exists() or not urls:
+        return
+    try:
+        cfg = json.loads(read_text(INDEXNOW_CFG))
+        host = cfg["host"]
+        key = cfg["key"]
+    except (OSError, ValueError, KeyError) as e:
+        print("[提示] IndexNow 配置不可用，跳过推送：", e)
+        return
+
+    payload = json.dumps({"host": host, "key": key, "urlList": urls}).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.indexnow.org/indexnow",
+        data=payload,
+        headers={
+            "Content-Type": "application/json; charset=utf-8",
+            "User-Agent": "AlexCuiDev.github.io indexnow-notifier",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            print("[IndexNow] 已通知 {} 个 URL，HTTP {}".format(len(urls), r.status))
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")[:200]
+        print("[IndexNow] 推送返回 HTTP {}：{}".format(e.code, detail))
+    except Exception as e:
+        print("[IndexNow] 推送失败（不影响构建）：", e)
+
+
 def build():
     if not POSTS_DIR.exists():
         print("[错误] 找不到目录：{}".format(POSTS_DIR))
@@ -322,6 +370,9 @@ def build():
     # 静态文章页（爬虫能直接读到正文）+ sitemap 同步
     build_static(posts)
     update_sitemap(posts)
+
+    # 主动通知 IndexNow 参与者（Bing / Yandex 等）来抓取
+    notify_indexnow(collect_sitemap_urls())
 
     print("[完成] {} 篇文章 → {} / {}".format(len(posts), POSTS_JSON.name, POSTS_JS.name))
     return 0

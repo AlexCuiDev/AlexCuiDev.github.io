@@ -1,0 +1,6 @@
+{
+  "host": "alexcuidev.github.io",
+  "key": "992b1a6cc94b5cf1",
+  "keyFile": "992b1a6cc94b5cf1.txt",
+  "note": "IndexNow 协议：key 文件必须放在站点根目录（https://alexcuidev.github.io/992b1a6cc94b5cf1.txt），内容就是 key 本身。tools/build-posts.py 每次构建后会 POST 一次 api.indexnow.org，通知 Bing / Yandex / Naver 等来重新抓取。Google 不支持 IndexNow，Google 侧靠 Search Console 的「请求编入索引」。"
+}
